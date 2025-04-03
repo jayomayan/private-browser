@@ -1,3 +1,3 @@
 <div>
-    {{-- The whole world belongs to you. --}}
+    {{-- The Master doesn't talk, he acts. --}}
 </div>

@@ -14,4 +14,9 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
+
+    Route::get('/private-browser', function () {
+        return view('private-browser');
+    })->name('private-browser');
 });
+
