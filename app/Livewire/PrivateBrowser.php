@@ -3,9 +3,72 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Illuminate\Support\Facades\Validator;
 
 class PrivateBrowser extends Component
 {
+    public $privateIp = '';
+    public $isConnected = false;
+    public $connectionError = '';
+    public $connectionUrl = '';
+
+    protected $rules = [
+        'privateIp' => 'required|ip'
+    ];
+
+    public function connect()
+    {
+        $this->connectionError = '';
+
+        $validator = Validator::make(
+            ['privateIp' => $this->privateIp],
+            ['privateIp' => 'required|ip']
+        );
+
+        if ($validator->fails()) {
+            $this->connectionError = 'Please enter a valid IP address.';
+            return;
+        }
+
+        // Validate if it's a private IP
+        if (!$this->isPrivateIp($this->privateIp)) {
+            $this->connectionError = 'Please enter a private IP address.';
+            return;
+        }
+
+        // Format the connection URL (using http by default, could be configurable)
+        $this->connectionUrl = "http://{$this->privateIp}";
+        $this->isConnected = true;
+    }
+
+    public function disconnect()
+    {
+        $this->isConnected = false;
+        $this->connectionUrl = '';
+    }
+
+    private function isPrivateIp($ip)
+    {
+        // Check if IP is in private ranges
+        $privateRanges = [
+            '10.0.0.0|10.255.255.255',     // 10.0.0.0/8
+            '172.16.0.0|172.31.255.255',   // 172.16.0.0/12
+            '192.168.0.0|192.168.255.255', // 192.168.0.0/16
+            '127.0.0.0|127.255.255.255'    // localhost
+        ];
+
+        $ip = ip2long($ip);
+
+        foreach ($privateRanges as $range) {
+            list($start, $end) = explode('|', $range);
+            if ((ip2long($start) <= $ip) && ($ip <= ip2long($end))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function render()
     {
         return view('livewire.private-browser');
