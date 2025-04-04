@@ -21,7 +21,18 @@ class CreateNewUser implements CreatesNewUsers
     {
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users',
+            function ($attribute, $value, $fail) {
+                // Restrict to specific domain(s)
+                if (!str_ends_with($value, '@frontiertowersphilippines.com')) {
+                    $fail('Only @frontiertowersphilippines.com email addresses are allowed.');
+                }
+            },
+        ], [
+            'name.required' => __('Please provide your full name.'),
+            'name.string' => __('Your name should be a string.'),
+            'name.max' => __('Your name should not exceed 255 characters.'),
+            'email.required' => __('Please provide your email address.'),],
             'password' => $this->passwordRules(),
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
         ])->validate();
