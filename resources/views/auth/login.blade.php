@@ -43,6 +43,12 @@
                     {{ __('Log in') }}
                 </x-button>
             </div>
+            <div class="flex items-center justify-end mt-4">
+                <a href="{{ url('/login/okta') }}" class="btn btn-primary w-full mt-4">
+                    Login with Okta
+                </a>
+            </div>
+
         </form>
     </x-authentication-card>
 </x-guest-layout>

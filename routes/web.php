@@ -1,6 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\OktaOIDCController;
+
+Route::get('/login/okta', [OktaOIDCController::class, 'login']);
+
 
 Route::get('/', function () {
     return view('welcome');
