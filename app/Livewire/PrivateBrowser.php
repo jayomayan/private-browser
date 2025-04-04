@@ -49,7 +49,7 @@ class PrivateBrowser extends Component
                 ->setQuality(100)
                 ->setDelay(500)
                 ->setScreenshotType('png')
-                ->setChromePath('/usr/bin/chromium-browser')
+                ->setChromePath('/usr/bin/google-chrome')
                 ->setOption('args', ['--no-sandbox'])
                 ->windowSize(1280, 720)
                 ->save(storage_path("app/public/snapshots/{$this->privateIp}.png"));
