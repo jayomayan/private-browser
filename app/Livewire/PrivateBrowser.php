@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Validator;
+use Spatie\Browsershot\Browsershot;
 
 class PrivateBrowser extends Component
 {
@@ -41,6 +42,15 @@ class PrivateBrowser extends Component
         $this->connectionUrl = "http://{$this->privateIp}";
         $this->isConnected = true;
         $this->pingresponse = $this->pingIP($this->privateIp);
+
+        try {
+            Browsershot::url("http://{$this->privateIp}")
+                ->setOption('args', ['--no-sandbox'])
+                ->windowSize(1280, 720)
+                ->save(storage_path("app/public/snapshots/{$this->privateIp}.png"));
+        } catch (\Exception $e) {
+            logger()->error('Browsershot failed: ' . $e->getMessage());
+        }
 
     }
 
