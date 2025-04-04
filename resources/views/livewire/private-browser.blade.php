@@ -3,7 +3,7 @@
 
     @if (!$isConnected)
         <div class="mb-6">
-            <label for="privateIp" class="block text-sm font-medium text-gray-700 mb-1">Enter Private IP:</label>
+            <label for="privateIp" class="block text-sm font-medium text-gray-700 mb-1">Enter the Site Private IP:</label>
             <div class="flex">
                 <input
                     type="text"
