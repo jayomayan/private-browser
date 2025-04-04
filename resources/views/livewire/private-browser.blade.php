@@ -35,6 +35,7 @@
         </div>
 
         <div class="border rounded-lg overflow-hidden" style="height: 200px;">
+            <img src="{{ asset("storage/snapshots/{$privateIp}.png") }}" alt="Snapshot">
             <iframe
                 src="{{ $connectionUrl }}"
                 class="w-full h-full border-0"
