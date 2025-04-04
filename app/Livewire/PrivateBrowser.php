@@ -11,6 +11,7 @@ class PrivateBrowser extends Component
     public $isConnected = false;
     public $connectionError = '';
     public $connectionUrl = '';
+    public $pingresponse;
 
     protected $rules = [
         'privateIp' => 'required|ip'
@@ -39,6 +40,8 @@ class PrivateBrowser extends Component
         // Format the connection URL (using http by default, could be configurable)
         $this->connectionUrl = "http://{$this->privateIp}";
         $this->isConnected = true;
+        $this->pingresponse = $this->pingIP($this->privateIp);
+
     }
 
     public function disconnect()
@@ -46,6 +49,33 @@ class PrivateBrowser extends Component
         $this->isConnected = false;
         $this->connectionUrl = '';
     }
+
+    private function pingIP($ip)
+{
+    $escapedIp = escapeshellarg($ip);
+    $command = "ping -c 5 -W 2 {$escapedIp} 2>&1";
+
+    exec($command, $output, $returnVar);
+
+    $pingResult = [
+        'raw_output' => $output, // <-- keep as array
+        'success' => $returnVar === 0
+    ];
+
+    if (preg_match('/(\d+)% packet loss/', implode("\n", $output), $packetLossMatch)) {
+        $pingResult['packet_loss'] = $packetLossMatch[1] . '%';
+    }
+
+    if (preg_match('/min\/avg\/max\/mdev = ([\d.]+)\/([\d.]+)\/([\d.]+)\/([\d.]+) ms/', implode("\n", $output), $rttMatch)) {
+        $pingResult['rtt'] = [
+            'min' => $rttMatch[1] . ' ms',
+            'avg' => $rttMatch[2] . ' ms',
+            'max' => $rttMatch[3] . ' ms'
+        ];
+    }
+
+    return $pingResult;
+}
 
     private function isPrivateIp($ip)
     {

@@ -34,12 +34,20 @@
             </button>
         </div>
 
-        <div class="border rounded-lg overflow-hidden" style="height: 600px;">
+        <div class="border rounded-lg overflow-hidden" style="height: 200px;">
             <iframe
                 src="{{ $connectionUrl }}"
                 class="w-full h-full border-0"
                 sandbox="allow-forms allow-scripts allow-same-origin"
             ></iframe>
+        </div>
+        <div class="border rounded-lg overflow-hidden" style="height: 200px;">
+            <ul>
+                @foreach ($pingresponse['raw_output'] as $line)
+                    <li>{{ $line }}</li>
+                @endforeach
+            </ul>
+
         </div>
     @endif
 </div>
