@@ -35,25 +35,7 @@
         </div>
 
         <div class="border rounded-lg overflow-hidden" style="height: 200px;">
-            <img src="{{ asset("storage/snapshots/{$privateIp}.png") }}" alt="Snapshot">
-            <iframe
-                src="{{ $connectionUrl }}"
-                class="w-full h-full border-0"
-                sandbox="allow-forms allow-scripts allow-same-origin"
-            ></iframe>
-            {{ $connectionUrl }}
-
-        </div>
-        <div class="border rounded-lg overflow-hidden" style="height: 200px;">
-            <img src="{{ asset("storage/snapshots/{$privateIp}.png") }}" alt="Snapshot">
-            <iframe
-                src="https://google.com"
-                class="w-full h-full border-0"
-                sandbox="allow-forms allow-scripts allow-same-origin"
-            ></iframe>
-
-            {{ $connectionUrl }}
-
+            <img src="{{ asset("storage/snapshots/{$privateIp}.png") }}" alt="Snapshot" style="height: 200px;">
         </div>
         <div class="border rounded-lg overflow-hidden" style="height: 200px;">
             <ul>
