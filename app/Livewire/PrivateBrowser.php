@@ -44,6 +44,9 @@ class PrivateBrowser extends Component
         $this->pingresponse = $this->pingIP($this->privateIp);
 
         try {
+
+            putenv('HOME=/tmp');
+
             Browsershot::url("http://{$this->privateIp}")
             ->setChromePath('/usr/bin/google-chrome') // or your verified path
             ->setOption('args', [
