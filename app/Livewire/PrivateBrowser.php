@@ -45,14 +45,14 @@ class PrivateBrowser extends Component
 
         try {
             Browsershot::url("http://{$this->privateIp}")
-                ->setTakesScreenshot()
-                ->setQuality(100)
-                ->setDelay(500)
-                ->setScreenshotType('png')
-                ->setChromePath('/usr/bin/google-chrome')
-                ->setOption('args', ['--no-sandbox'])
-                ->windowSize(1280, 720)
-                ->save(storage_path("app/public/snapshots/{$this->privateIp}.png"));
+            ->setChromePath('/usr/bin/google-chrome') // or output of `which google-chrome`
+            ->setOption('args', [
+                '--no-sandbox',
+                '--disable-dev-shm-usage',
+                '--user-data-dir=/tmp/chrome-data'  // <= this is the fix
+            ])
+            ->windowSize(1280, 720)
+            ->save(storage_path("app/public/snapshots/{$this->privateIp}.png"));
         } catch (\Exception $e) {
             logger()->error('Browsershot failed: ' . $e->getMessage());
         }
