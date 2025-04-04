@@ -45,7 +45,6 @@ class PrivateBrowser extends Component
 
         try {
             Browsershot::url("http://{$this->privateIp}")
-                ->setChromePath('/snap/bin/chromium')
                 ->setOption('args', ['--no-sandbox'])
                 ->windowSize(1280, 720)
                 ->save(storage_path("app/public/snapshots/{$this->privateIp}.png"));
