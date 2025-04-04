@@ -39,12 +39,26 @@
     @else
         <div class="mb-4 flex items-center justify-between">
             <p class="text-sm text-gray-600">Connected to: <span class="font-semibold">{{ $privateIp }}</span></p>
-            <button
-                wire:click="disconnect"
-                class="px-3 py-1 text-sm bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+        <button
+            wire:click="connect"
+            class="px-4 py-2 bg-indigo-600 text-white rounded-r-md hover:bg-indigo-700 relative"
+        >
+            <span wire:loading.remove wire:target="connect">Connect</span>
+
+            {{-- Spinner (absolute inside button) --}}
+            <svg
+                wire:loading
+                wire:target="connect"
+                class="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-white animate-spin"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none" viewBox="0 0 24 24"
             >
-                Disconnect
-            </button>
+                <circle class="opacity-25" cx="12" cy="12" r="10"
+                        stroke="currentColor" stroke-width="4"/>
+                <path class="opacity-75" fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8H4z"/>
+            </svg>
+        </button>
         </div>
 
         {{-- Show loading spinner over snapshot + ping area --}}
