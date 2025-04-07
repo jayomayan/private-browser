@@ -63,6 +63,8 @@ class PrivateBrowser extends Component
 
             Browsershot::url("https://{$this->privateIp}")
             ->setChromePath('/usr/bin/google-chrome') // or your verified path
+            ->setOption('args', ['--ignore-certificate-errors'])
+            ->setOption('ignoreHTTPSErrors', true)
             ->setOption('args', [
                 '--no-sandbox',
                 '--disable-dev-shm-usage',
