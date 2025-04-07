@@ -62,16 +62,16 @@ class PrivateBrowser extends Component
             ->save(storage_path("app/public/snapshots/{$this->privateIp}.png"));
 
             Browsershot::url("https://{$this->privateIp}")
-            ->setChromePath('/usr/bin/google-chrome') // or your verified path
-            ->setOption('args', ['--ignore-certificate-errors'])
+            ->setChromePath('/usr/bin/google-chrome')
             ->setOption('ignoreHTTPSErrors', true)
             ->setOption('args', [
                 '--no-sandbox',
                 '--disable-dev-shm-usage',
-                '--disable-crash-reporter',             // ✅ stops crashpad
-                '--user-data-dir=/tmp/chrome-data',     // ✅ avoids /var/www/.local
-                '--no-first-run',                       // ✅ suppress setup dialogs
-                '--no-default-browser-check'
+                '--disable-crash-reporter',
+                '--user-data-dir=/tmp/chrome-data',
+                '--no-first-run',
+                '--no-default-browser-check',
+                '--ignore-certificate-errors' // ← this was being skipped before
             ])
             ->windowSize(1280, 720)
             ->timeout(60)
