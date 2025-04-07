@@ -54,6 +54,10 @@
                 <img src="{{ asset("storage/snapshots/{$privateIp}.png") }}" alt="Snapshot" style="height: 250px;">
             </div>
 
+            <div class="border rounded-lg overflow-hidden m-4" style="height: 200px;">
+                <img src="{{ asset("storage/snapshots/{$privateIp}-s.png") }}" alt="Snapshot" style="height: 250px;">
+            </div>
+
             <div class="border rounded-lg overflow-hidden m-4 p-4" style="height: 250px;">
                 <ul>
                     @foreach ($pingresponse['raw_output'] as $line)
