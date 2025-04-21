@@ -22,5 +22,9 @@ Route::middleware([
     Route::get('/private-browser', function () {
         return view('private-browser');
     })->name('private-browser');
+
+    Route::get('/snmp-walk', function () {
+        return view('snmp-walk');
+    })->name('snmp-walk');
 });
 

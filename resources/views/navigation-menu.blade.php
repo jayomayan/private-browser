@@ -21,6 +21,11 @@
                         {{ __('Private Browser') }}
                     </x-nav-link>
                 </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link href="{{ route('snmp-walk') }}" :active="request()->routeIs('snmp-walk')">
+                        {{ __('SNMP Walk') }}
+                    </x-nav-link>
+                </div>
 
             </div>
 
@@ -150,6 +155,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link href="{{ route('private-browser') }}" :active="request()->routeIs('private-browser')">
                 {{ __('Private Browser') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('snmp-walk') }}" :active="request()->routeIs('snmp-walk')">
+                {{ __('SNMP Walk') }}
             </x-responsive-nav-link>
         </div>
 
