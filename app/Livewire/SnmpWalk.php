@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\Log;
 class SnmpWalk extends Component
 {
     public $host;
-    public $port = 161;
-    public $community = 'public';
-    public $oid = '.1.3.6.1.2.1.1'; // Default to sysDescr
+    public $port = 2161;
+    public $community = 'axinplc';
+    public $oid = '.1.3.6.1.4.1.53318.100.1.0'; // Default to sysDescr
     public $results = [];
     public $error;
 
