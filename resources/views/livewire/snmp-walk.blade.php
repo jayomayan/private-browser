@@ -16,7 +16,7 @@
         {{-- Input Form --}}
         <div class="space-y-4 mb-6">
             <div>
-                <label for="host" class="block text-sm font-medium text-gray-700 mb-1">Host</label>
+                <label for="host" class="block text-sm font-medium text-gray-700 mb-1">Host (Hostname or IP Address)</label>
                 <input
                     id="host"
                     type="text"
@@ -27,7 +27,7 @@
             </div>
 
             <div>
-                <label for="port" class="block text-sm font-medium text-gray-700 mb-1">Port</label>
+                <label for="port" class="block text-sm font-medium text-gray-700 mb-1">SNMP Port (e.g. 161, 2161)</label>
                 <input
                     id="port"
                     type="number"
@@ -38,7 +38,7 @@
             </div>
 
             <div>
-                <label for="community" class="block text-sm font-medium text-gray-700 mb-1">Community</label>
+                <label for="community" class="block text-sm font-medium text-gray-700 mb-1">Community (e.g. public, axiplc)</label>
                 <input
                     id="community"
                     type="text"
