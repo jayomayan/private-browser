@@ -17,43 +17,50 @@ class SnmpWalk extends Component
     public $error;
 
     public function submit()
-    {
-        $this->snmpError = null;
-        $this->results = [];
+{
+    $this->snmpError = null;
+    $this->results = [];
 
-        try {
+    try {
+        // Split multiple OIDs entered as comma-separated
+        $oids = array_filter(array_map('trim', explode(',', $this->oid)));
+
+        foreach ($oids as $singleOid) {
             $cmd = sprintf(
                 'snmpwalk -v2c -c %s %s:%d %s',
                 escapeshellarg($this->community),
                 escapeshellarg($this->host),
                 (int) $this->port,
-                escapeshellarg($this->oid)
+                escapeshellarg($singleOid)
             );
 
             exec($cmd, $output, $exitCode);
 
             if ($exitCode !== 0) {
-                $this->snmpError = "SNMP command failed to execute (code: $exitCode)";
-                return;
+                $this->snmpError = "SNMP command failed for OID {$singleOid} (code: $exitCode)";
+                continue; // Continue checking other OIDs
             }
 
             foreach ($output as $line) {
                 if (strpos($line, ' = ') !== false) {
-                    [$oid, $value] = explode(' = ', $line, 2);
+                    [$oidResult, $value] = explode(' = ', $line, 2);
                     $this->results[] = [
-                        'oid' => trim($oid),
+                        'oid' => trim($oidResult),
                         'value' => trim($value),
                     ];
                 }
             }
 
-            if (empty($this->results)) {
-                $this->snmpError = 'SNMP returned no results.';
-            }
-        } catch (\Exception $e) {
-            $this->snmpError = $e->getMessage();
+            $output = []; // Clear for next loop
         }
+
+        if (empty($this->results)) {
+            $this->snmpError = 'SNMP returned no results for any provided OIDs.';
+        }
+    } catch (\Exception $e) {
+        $this->snmpError = $e->getMessage();
     }
+}
 
     public function render()
     {

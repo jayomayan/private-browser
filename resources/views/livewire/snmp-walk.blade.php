@@ -38,7 +38,7 @@
             </div>
 
             <div>
-                <label for="community" class="block text-sm font-medium text-gray-700 mb-1">Community (e.g. public, axiplc)</label>
+                <label for="community" class="block text-sm font-medium text-gray-700 mb-1">Community (e.g. public, axinplc)</label>
                 <input
                     id="community"
                     type="text"
@@ -49,7 +49,7 @@
             </div>
 
             <div>
-                <label for="oid" class="block text-sm font-medium text-gray-700 mb-1">OID</label>
+                <label for="oid" class="block text-sm font-medium text-gray-700 mb-1">OID (single OID or Multiple OID separated by comma)</label>
                 <input
                     id="oid"
                     type="text"
