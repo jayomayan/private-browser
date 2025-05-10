@@ -188,22 +188,22 @@ class PrivateBrowser extends Component
     if ($deviceType === 'type3') {
         try {
             $firmware = Browsershot::url("https://$ip/")
-                ->setNodeBinary('/usr/bin/node') // adjust path if needed
-                ->setNpmBinary('/usr/bin/npm')
-                ->waitUntilNetworkIdle()
-                ->timeout(30)
-                ->evaluateScript("
-                    () => {
-                        const modal = document.getElementById('changepsw');
-                        if (modal && getComputedStyle(modal).display !== 'none') {
-                            const cancelBtn = document.getElementById('changepsw_cancle') || document.getElementById('changepsw_close');
-                            if (cancelBtn) cancelBtn.click();
-                        }
-
-                        const label = document.getElementById('qwert_firmware_ver');
-                        return label ? label.innerText : null;
+            ->setNodeBinary('/usr/bin/node')
+            ->setNpmBinary('/usr/bin/npm')
+            ->waitUntilNetworkIdle()
+            ->timeout(30)
+            ->evaluate("
+                () => {
+                    const modal = document.getElementById('changepsw');
+                    if (modal && getComputedStyle(modal).display !== 'none') {
+                        const cancelBtn = document.getElementById('changepsw_cancle') || document.getElementById('changepsw_close');
+                        if (cancelBtn) cancelBtn.click();
                     }
-                ");
+
+                    const label = document.getElementById('qwert_firmware_ver');
+                    return label ? label.innerText : null;
+                }
+            ");
 
             if ($firmware) {
                 return "[SUCCESS] $ip - Retrieved info:\nFirmware Version: $firmware";
