@@ -188,9 +188,9 @@ class PrivateBrowser extends Component
     if ($deviceType === 'type3') {
         try {
 
-            putenv('PUPPETEER_EXECUTABLE_PATH=/var/www/.cache/puppeteer/chrome/linux-135.0.7049.42/chrome-linux64/chrome');
+
             $firmware = Browsershot::url("https://$ip/")
-            ->setChromeExecutablePath('/var/www/.cache/puppeteer/chrome/linux-135.0.7049.42/chrome-linux64/chrome')
+            ->setChromePath('/usr/bin/google-chrome-stable')
             ->setNodeBinary('/usr/bin/node')
             ->setNpmBinary('/usr/bin/npm')
             ->waitUntilNetworkIdle()
