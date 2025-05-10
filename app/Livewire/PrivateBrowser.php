@@ -14,8 +14,8 @@ class PrivateBrowser extends Component
     public $connectionError = '';
     public $connectionUrl = '';
     public $pingresponse;
-    public $deviceInfo1 = 'Firmware Version will soon be displayed here.';
-    public $deviceInfo2 = 'Firmware Version will soon be displayed here.';
+    public $deviceInfo1 ='';
+    public $deviceInfo2 ='';
 
     protected $rules = [
         'privateIp' => 'required|ip'
