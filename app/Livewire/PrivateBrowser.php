@@ -53,8 +53,8 @@ class PrivateBrowser extends Component
      //   ) {
      //       $this->deviceInfo1 = $this->scanIp($this->privateIp, 'type2');
      //   }
-        //
-      //  $this->deviceInfo2 = $this->scanIp($this->privateIp, 'type3');
+    //
+    //  $this->deviceInfo2 = $this->scanIp($this->privateIp, 'type3');
 
         try {
 
