@@ -14,8 +14,8 @@ class PrivateBrowser extends Component
     public $connectionError = '';
     public $connectionUrl = '';
     public $pingresponse;
-    public $deviceInfo1;
-    public $deviceInfo2;
+    public $deviceInfo1 = 'Firmware Version will soon be displayed here.';
+    public $deviceInfo2 = 'Firmware Version will soon be displayed here.';
 
     protected $rules = [
         'privateIp' => 'required|ip'
@@ -45,15 +45,16 @@ class PrivateBrowser extends Component
         $this->connectionUrl = "http://{$this->privateIp}";
         $this->isConnected = true;
         $this->pingresponse = $this->pingIP($this->privateIp);
-        $this->deviceInfo1 = $this->scanIp($this->privateIp, 'type1');
-        if (
-            str_contains($this->deviceInfo1, 'no version info found') ||
-            str_contains($this->deviceInfo1, 'Unable to fetch HTML')
-        ) {
-            $this->deviceInfo1 = $this->scanIp($this->privateIp, 'type2');
-        }
 
-        $this->deviceInfo2 = $this->scanIp($this->privateIp, 'type3');
+     //   $this->deviceInfo1 = $this->scanIp($this->privateIp, 'type1');
+     //   if (
+     //       str_contains($this->deviceInfo1, 'no version info found') ||
+     //       str_contains($this->deviceInfo1, 'Unable to fetch HTML')
+     //   ) {
+     //       $this->deviceInfo1 = $this->scanIp($this->privateIp, 'type2');
+     //   }
+        //
+      //  $this->deviceInfo2 = $this->scanIp($this->privateIp, 'type3');
 
         try {
 
