@@ -187,12 +187,15 @@ class PrivateBrowser extends Component
     // --- Type 3: Use Browsershot for interactive DOM manipulation ---
     if ($deviceType === 'type3') {
         try {
-
-
             $firmware = Browsershot::url("https://$ip/")
             ->setChromePath('/usr/bin/google-chrome-stable')
             ->setNodeBinary('/usr/bin/node')
             ->setNpmBinary('/usr/bin/npm')
+            ->addChromiumArguments([
+                '--no-sandbox',
+                '--disable-dev-shm-usage',
+                '--user-data-dir=/tmp/chrome-profile' // ✅ <== This is key
+            ])
             ->waitUntilNetworkIdle()
             ->timeout(30)
             ->evaluate("
