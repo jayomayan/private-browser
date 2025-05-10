@@ -50,23 +50,21 @@
                 </button>
             </div>
 
-            <div class="flex border rounded-lg overflow-hidden m-4 h-[250px]">
-                <div class="w-1/2 relative">
+            <div class="flex flex-col md:flex-row border rounded-lg overflow-hidden m-4 h-auto md:h-[250px]">
+                <div class="relative w-full md:w-1/2">
                     <img src="{{ asset("storage/snapshots/{$privateIp}.png") }}" alt="Snapshot" class="h-full w-full object-contain">
-                    <div class="absolute top-0 bottom-0 left-1/2 w-[1px] bg-gray-200"></div>
                 </div>
-                <div class="w-1/2 p-4 flex items-center justify-center text-sm text-gray-700">
-                    <pre class="whitespace-pre-wrap">{{ $deviceInfo1 }}</pre>
+                <div class="w-full md:w-1/2 p-4 flex items-center justify-center text-sm text-gray-700 overflow-auto">
+                    <pre class="whitespace-pre-wrap break-words">{{ $deviceInfo1 }}</pre>
                 </div>
             </div>
 
-            <div class="flex border rounded-lg overflow-hidden m-4 h-[250px]">
-                <div class="w-1/2 relative">
+            <div class="flex flex-col md:flex-row border rounded-lg overflow-hidden m-4 h-auto md:h-[250px]">
+                <div class="relative w-full md:w-1/2">
                     <img src="{{ asset("storage/snapshots/{$privateIp}-s.png") }}" alt="Snapshot" class="h-full w-full object-contain">
-                    <div class="absolute top-0 bottom-0 left-1/2 w-[1px] bg-gray-200"></div>
                 </div>
-                <div class="w-1/2 p-4 flex items-center justify-center text-sm text-gray-700">
-                    <pre class="whitespace-pre-wrap">{{ $deviceInfo2 }}</pre>
+                <div class="w-full md:w-1/2 p-4 flex items-center justify-center text-sm text-gray-700 overflow-auto">
+                    <pre class="whitespace-pre-wrap break-words">{{ $deviceInfo2 }}</pre>
                 </div>
             </div>
 
