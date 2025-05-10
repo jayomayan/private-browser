@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Browsershot\Browsershot;
+use Illuminate\Support\Facades\Log;
 
 class PrivateBrowser extends Component
 {
@@ -202,6 +203,8 @@ class PrivateBrowser extends Component
         ]);
 
         $html = @file_get_contents($url, false, $context);
+
+        log::info($html);
 
         if (!$html) {
             return "[ERROR] Unable to fetch HTML from $url.";
