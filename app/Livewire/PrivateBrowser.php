@@ -151,114 +151,134 @@ class PrivateBrowser extends Component
     }
 
     public function scanIp(string $ip, string $deviceType): string
-    {
-        // Set protocol and credentials based on device type
-        switch ($deviceType) {
-            case 'type3':
-                $protocol = 'https';
-                $username = 'admin';
-                $password = 'admin';
-                break;
+{
+    // Set protocol and credentials based on device type
+    switch ($deviceType) {
+        case 'type3':
+            $protocol = 'https';
+            $username = 'admin';
+            $password = 'admin';
+            break;
 
-            case 'type2':
-                $protocol = 'http';
-                $username = 'admin';
-                $password = 'admin@123';
-                break;
+        case 'type2':
+            $protocol = 'http';
+            $username = 'admin';
+            $password = 'admin@123';
+            break;
 
-            case 'type1':
-            default:
-                $protocol = 'http';
-                $username = 'admin';
-                $password = 'admin';
-                break;
-        }
+        case 'type1':
+        default:
+            $protocol = 'http';
+            $username = 'admin';
+            $password = 'admin';
+            break;
+    }
 
-        // Ping check
-        $pingCmd = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'
-            ? "ping -n 1 -w 100 $ip"
-            : "ping -c 1 -W 1 $ip";
-        exec($pingCmd, $output, $status);
+    // Ping check
+    $pingCmd = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'
+        ? "ping -n 1 -w 100 $ip"
+        : "ping -c 1 -W 1 $ip";
+    exec($pingCmd, $output, $status);
 
-        if ($status !== 0) {
-            return "[FAIL] $ip - Unreachable";
-        }
+    if ($status !== 0) {
+        return "[FAIL] $ip - Unreachable";
+    }
 
-        // Fetch HTML content
+    // --- Type 3: Use Browsershot for interactive DOM manipulation ---
+    if ($deviceType === 'type3') {
+        try {
+            $firmware = Browsershot::url("https://$ip/")
+                ->setNodeBinary('/usr/bin/node') // adjust path if needed
+                ->setNpmBinary('/usr/bin/npm')
+                ->waitUntilNetworkIdle()
+                ->timeout(30)
+                ->evaluateScript("
+                    () => {
+                        const modal = document.getElementById('changepsw');
+                        if (modal && getComputedStyle(modal).display !== 'none') {
+                            const cancelBtn = document.getElementById('changepsw_cancle') || document.getElementById('changepsw_close');
+                            if (cancelBtn) cancelBtn.click();
+                        }
 
-        if ($deviceType === 'type1') {
-            $url = "$protocol://$ip/cgi-bin/about_info";
-        } else {
-            $url = "$protocol://$ip/";
-        }
-        $context = stream_context_create([
-            'http' => [
-                'header' => "Authorization: Basic " . base64_encode("$username:$password"),
-                'ignore_errors' => true
-            ],
-            'ssl' => [
-                'verify_peer' => false,
-                'verify_peer_name' => false
-            ]
-        ]);
-
-        $html = @file_get_contents($url, false, $context);
-
-        log::info($html);
-
-        if (!$html) {
-            return "[ERROR] Unable to fetch HTML from $url.";
-        }
-
-        libxml_use_internal_errors(true);
-        $dom = new \DOMDocument();
-        $dom->loadHTML($html);
-        libxml_clear_errors();
-        $xpath = new \DOMXPath($dom);
-
-        $info = [];
-
-        // --- Type 1: Table Rows ---
-        if ($deviceType === 'type1') {
-            foreach ($xpath->query('//tr') as $row) {
-                $cols = $row->getElementsByTagName('td');
-                if ($cols->length >= 2) {
-                    $key = trim($cols->item(0)->nodeValue);
-                    $value = trim($cols->item(1)->nodeValue);
-                    if (stripos($key, 'version') !== false || stripos($key, 'model') !== false) {
-                        $info[$key] = $value;
+                        const label = document.getElementById('qwert_firmware_ver');
+                        return label ? label.innerText : null;
                     }
+                ");
+
+            if ($firmware) {
+                return "[SUCCESS] $ip - Retrieved info:\nFirmware Version: $firmware";
+            } else {
+                return "[INFO] $ip - Reachable, but no version info found.";
+            }
+
+        } catch (\Exception $e) {
+            return "[ERROR] Type3 fetch failed: " . $e->getMessage();
+        }
+    }
+
+    // --- Type 1 or 2 fallback using file_get_contents ---
+    $url = $deviceType === 'type1'
+        ? "$protocol://$ip/cgi-bin/about_info"
+        : "$protocol://$ip/";
+
+    $context = stream_context_create([
+        'http' => [
+            'header' => "Authorization: Basic " . base64_encode("$username:$password"),
+            'ignore_errors' => true
+        ],
+        'ssl' => [
+            'verify_peer' => false,
+            'verify_peer_name' => false
+        ]
+    ]);
+
+    $html = @file_get_contents($url, false, $context);
+
+    if (!$html) {
+        return "[ERROR] Unable to fetch HTML from $url.";
+    }
+
+    libxml_use_internal_errors(true);
+    $dom = new \DOMDocument();
+    $dom->loadHTML($html);
+    libxml_clear_errors();
+    $xpath = new \DOMXPath($dom);
+
+    $info = [];
+
+    // Type 1: Parse table rows
+    if ($deviceType === 'type1') {
+        foreach ($xpath->query('//tr') as $row) {
+            $cols = $row->getElementsByTagName('td');
+            if ($cols->length >= 2) {
+                $key = trim($cols->item(0)->nodeValue);
+                $value = trim($cols->item(1)->nodeValue);
+                if (stripos($key, 'version') !== false || stripos($key, 'model') !== false) {
+                    $info[$key] = $value;
                 }
             }
         }
-
-        // --- Type 2: <label id="systemVerion"> ---
-        if ($deviceType === 'type2') {
-            $label = $dom->getElementById('systemVerion');
-            if ($label) {
-                $info['System Version'] = trim($label->nodeValue);
-            }
-        }
-
-        // --- Type 3: <label id="qwert_firmware_ver"> ---
-        if ($deviceType === 'type3') {
-            $label = $dom->getElementById('qwert_firmware_ver');
-            if ($label) {
-                $info['Firmware Version'] = trim($label->nodeValue);
-            }
-        }
-
-        if (empty($info)) {
-            return "[INFO] $ip - Reachable, but no version info found.";
-        }
-
-        $output = "[SUCCESS] $ip - Retrieved info:\n";
-        foreach ($info as $key => $value) {
-            $output .= "$key: $value\n";
-        }
-
-        return $output;
     }
+
+    // Type 2: Parse label with ID
+    if ($deviceType === 'type2') {
+        $label = $dom->getElementById('systemVerion');
+        if ($label) {
+            $info['System Version'] = trim($label->nodeValue);
+        }
+    }
+
+    if (empty($info)) {
+        return "[INFO] $ip - Reachable, but no version info found.";
+    }
+
+    $output = "[SUCCESS] $ip - Retrieved info:\n";
+    foreach ($info as $key => $value) {
+        $output .= "$key: $value\n";
+    }
+
+    return $output;
+}
 
     public function render()
     {
