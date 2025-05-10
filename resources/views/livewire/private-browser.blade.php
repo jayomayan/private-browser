@@ -55,7 +55,9 @@
                     <img src="{{ asset("storage/snapshots/{$privateIp}.png") }}" alt="Snapshot" class="h-full w-full object-contain">
                 </div>
                 <div class="w-full md:w-1/2 p-4 flex items-center justify-center text-sm text-gray-700 overflow-auto">
-                    <pre class="whitespace-pre-wrap break-words">{{ $deviceInfo1 }}</pre>
+                    <div class="whitespace-pre-wrap break-words break-all w-full text-center">
+                        {{ $deviceInfo1 }}
+                    </div>
                 </div>
             </div>
 
@@ -64,7 +66,9 @@
                     <img src="{{ asset("storage/snapshots/{$privateIp}-s.png") }}" alt="Snapshot" class="h-full w-full object-contain">
                 </div>
                 <div class="w-full md:w-1/2 p-4 flex items-center justify-center text-sm text-gray-700 overflow-auto">
-                    <pre class="whitespace-pre-wrap break-words">{{ $deviceInfo2 }}</pre>
+                    <div class="whitespace-pre-wrap break-words break-all w-full text-center">
+                        {{ $deviceInfo2 }}
+                    </div>
                 </div>
             </div>
 
