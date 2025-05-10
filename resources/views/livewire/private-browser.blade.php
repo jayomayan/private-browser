@@ -52,12 +52,18 @@
 
             <div class="relative border rounded-lg overflow-hidden m-4" style="height: 250px;">
                 <img src="{{ asset("storage/snapshots/{$privateIp}.png") }}" alt="Snapshot" class="h-full w-full object-contain">
-                <div class="absolute top-0 bottom-0 left-1/2 w-[1px] bg-white">{{$deviceInfo1}}</div>
+                <div class="absolute top-0 bottom-0 left-1/2 w-[1px] bg-gray-200"></div>
+                <div class="absolute bottom-2 left-2 text-sm text-gray-700 bg-white bg-opacity-75 px-2 py-1 rounded">
+                    {{ $deviceInfo1 }}
+                </div>
             </div>
 
             <div class="relative border rounded-lg overflow-hidden m-4" style="height: 250px;">
                 <img src="{{ asset("storage/snapshots/{$privateIp}-s.png") }}" alt="Snapshot" class="h-full w-full object-contain">
-                <div class="absolute top-0 bottom-0 left-1/2 w-[1px] bg-white">{{$deviceInfo2}}</div>
+                <div class="absolute top-0 bottom-0 left-1/2 w-[1px] bg-gray-200"></div>
+                <div class="absolute bottom-2 left-2 text-sm text-gray-700 bg-white bg-opacity-75 px-2 py-1 rounded">
+                    {{ $deviceInfo2 }}
+                </div>
             </div>
 
             <div class="border rounded-lg overflow-hidden m-4 p-4" style="height: 250px;">
