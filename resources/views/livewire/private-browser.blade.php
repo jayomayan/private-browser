@@ -72,7 +72,7 @@
                 </div>
             </div>
 
-            <div class="border rounded-lg overflow-hidden m-4 p-4" style="height: 250px;">
+            <div class="border rounded-lg overflow-hidden m-4 p-4 text-sm text-gray-700 " style="height: 250px;">
                 <ul>
                     @foreach ($pingresponse['raw_output'] as $line)
                         <li>{{ $line }}</li>
