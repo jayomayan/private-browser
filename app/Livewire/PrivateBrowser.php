@@ -187,6 +187,8 @@ class PrivateBrowser extends Component
     // --- Type 3: Use Browsershot for interactive DOM manipulation ---
     if ($deviceType === 'type3') {
         try {
+
+            putenv('PUPPETEER_EXECUTABLE_PATH=/var/www/.cache/puppeteer/chrome/linux-135.0.7049.42/chrome-linux64/chrome');
             $firmware = Browsershot::url("https://$ip/")
             ->setChromeExecutablePath('/var/www/.cache/puppeteer/chrome/linux-135.0.7049.42/chrome-linux64/chrome')
             ->setNodeBinary('/usr/bin/node')
