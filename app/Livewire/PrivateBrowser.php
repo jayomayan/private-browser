@@ -191,6 +191,7 @@ class PrivateBrowser extends Component
             ->setChromePath('/usr/bin/google-chrome-stable')
             ->setNodeBinary('/usr/bin/node')
             ->setNpmBinary('/usr/bin/npm')
+            ->setEnvironmentVariable('HOME', '/tmp')
             ->addChromiumArguments([
                 '--no-sandbox',
                 '--disable-gpu',
