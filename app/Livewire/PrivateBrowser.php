@@ -13,6 +13,8 @@ class PrivateBrowser extends Component
     public $connectionError = '';
     public $connectionUrl = '';
     public $pingresponse;
+    public $deviceInfo1;
+    public $deviceInfo2;
 
     protected $rules = [
         'privateIp' => 'required|ip'
@@ -42,6 +44,11 @@ class PrivateBrowser extends Component
         $this->connectionUrl = "http://{$this->privateIp}";
         $this->isConnected = true;
         $this->pingresponse = $this->pingIP($this->privateIp);
+        $this->deviceInfo1 = $this->scanIp($this->privateIp, 'type1');
+        if (str_contains($this->deviceInfo1, 'no version info found')) {
+            $this->deviceInfo1 = $this->scanIp($this->privateIp, 'type2');
+        }
+        $this->deviceInfo2 = $this->scanIp($this->privateIp, 'type3');
 
         try {
 
@@ -136,6 +143,114 @@ class PrivateBrowser extends Component
         }
 
         return false;
+    }
+
+    public function scanIp(string $ip, string $deviceType): string
+    {
+        // Set protocol and credentials based on device type
+        switch ($deviceType) {
+            case 'type3':
+                $protocol = 'https';
+                $username = 'admin';
+                $password = 'admin';
+                break;
+
+            case 'type2':
+                $protocol = 'http';
+                $username = 'admin';
+                $password = 'admin@123';
+                break;
+
+            case 'type1':
+            default:
+                $protocol = 'http';
+                $username = 'admin';
+                $password = 'admin';
+                break;
+        }
+
+        // Ping check
+        $pingCmd = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'
+            ? "ping -n 1 -w 100 $ip"
+            : "ping -c 1 -W 1 $ip";
+        exec($pingCmd, $output, $status);
+
+        if ($status !== 0) {
+            return "[FAIL] $ip - Unreachable";
+        }
+
+        // Fetch HTML content
+
+        if ($deviceType === 'type1') {
+            $url = "$protocol://$ip/cgi-bin/about_info";
+        } else {
+            $url = "$protocol://$ip/";
+        }
+        $context = stream_context_create([
+            'http' => [
+                'header' => "Authorization: Basic " . base64_encode("$username:$password"),
+                'ignore_errors' => true
+            ],
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false
+            ]
+        ]);
+
+        $html = @file_get_contents($url, false, $context);
+
+        if (!$html) {
+            return "[ERROR] Unable to fetch HTML from $url.";
+        }
+
+        libxml_use_internal_errors(true);
+        $dom = new \DOMDocument();
+        $dom->loadHTML($html);
+        libxml_clear_errors();
+        $xpath = new \DOMXPath($dom);
+
+        $info = [];
+
+        // --- Type 1: Table Rows ---
+        if ($deviceType === 'type1') {
+            foreach ($xpath->query('//tr') as $row) {
+                $cols = $row->getElementsByTagName('td');
+                if ($cols->length >= 2) {
+                    $key = trim($cols->item(0)->nodeValue);
+                    $value = trim($cols->item(1)->nodeValue);
+                    if (stripos($key, 'version') !== false || stripos($key, 'model') !== false) {
+                        $info[$key] = $value;
+                    }
+                }
+            }
+        }
+
+        // --- Type 2: <label id="systemVerion"> ---
+        if ($deviceType === 'type2') {
+            $label = $dom->getElementById('systemVerion');
+            if ($label) {
+                $info['System Version'] = trim($label->nodeValue);
+            }
+        }
+
+        // --- Type 3: <label id="qwert_firmware_ver"> ---
+        if ($deviceType === 'type3') {
+            $label = $dom->getElementById('qwert_firmware_ver');
+            if ($label) {
+                $info['Firmware Version'] = trim($label->nodeValue);
+            }
+        }
+
+        if (empty($info)) {
+            return "[INFO] $ip - Reachable, but no version info found.";
+        }
+
+        $output = "[SUCCESS] $ip - Retrieved info:\n";
+        foreach ($info as $key => $value) {
+            $output .= "$key: $value\n";
+        }
+
+        return $output;
     }
 
     public function render()

@@ -24,7 +24,7 @@
                         id="privateIp"
                         wire:model="privateIp"
                         class="flex-1 rounded-l-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                        placeholder="e.g., 192.168.1.1"
+                        placeholder="e.g., 10.194.78.135"
                     >
                     <button
                         wire:click="connect"
@@ -50,12 +50,14 @@
                 </button>
             </div>
 
-            <div class="border rounded-lg overflow-hidden m-4" style="height: 200px;">
-                <img src="{{ asset("storage/snapshots/{$privateIp}.png") }}" alt="Snapshot" style="height: 250px;">
+            <div class="relative border rounded-lg overflow-hidden m-4" style="height: 250px;">
+                <img src="{{ asset("storage/snapshots/{$privateIp}.png") }}" alt="Snapshot" class="h-full w-full object-contain">
+                <div class="absolute top-0 bottom-0 left-1/2 w-[1px] bg-white">{{$deviceInfo1}}</div>
             </div>
 
-            <div class="border rounded-lg overflow-hidden m-4" style="height: 200px;">
-                <img src="{{ asset("storage/snapshots/{$privateIp}-s.png") }}" alt="Snapshot" style="height: 250px;">
+            <div class="relative border rounded-lg overflow-hidden m-4" style="height: 250px;">
+                <img src="{{ asset("storage/snapshots/{$privateIp}-s.png") }}" alt="Snapshot" class="h-full w-full object-contain">
+                <div class="absolute top-0 bottom-0 left-1/2 w-[1px] bg-white">{{$deviceInfo2}}</div>
             </div>
 
             <div class="border rounded-lg overflow-hidden m-4 p-4" style="height: 250px;">
