@@ -45,9 +45,13 @@ class PrivateBrowser extends Component
         $this->isConnected = true;
         $this->pingresponse = $this->pingIP($this->privateIp);
         $this->deviceInfo1 = $this->scanIp($this->privateIp, 'type1');
-        if (str_contains($this->deviceInfo1, 'no version info found')) {
+        if (
+            str_contains($this->deviceInfo1, 'no version info found') ||
+            str_contains($this->deviceInfo1, 'Unable to fetch HTML')
+        ) {
             $this->deviceInfo1 = $this->scanIp($this->privateIp, 'type2');
         }
+
         $this->deviceInfo2 = $this->scanIp($this->privateIp, 'type3');
 
         try {
