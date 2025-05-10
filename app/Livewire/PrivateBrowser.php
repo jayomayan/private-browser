@@ -193,8 +193,18 @@ class PrivateBrowser extends Component
             ->setNpmBinary('/usr/bin/npm')
             ->addChromiumArguments([
                 '--no-sandbox',
+                '--disable-gpu',
                 '--disable-dev-shm-usage',
-                '--user-data-dir=/tmp/chrome-profile' // ✅ <== This is key
+                '--disable-software-rasterizer',
+                '--disable-setuid-sandbox',
+                '--disable-crash-reporter',
+                '--no-first-run',
+                '--no-default-browser-check',
+                '--disable-extensions',
+                '--disable-background-networking',
+                '--disable-sync',
+                '--disable-translate',
+                '--user-data-dir=/tmp/chrome-profile'
             ])
             ->waitUntilNetworkIdle()
             ->timeout(30)
