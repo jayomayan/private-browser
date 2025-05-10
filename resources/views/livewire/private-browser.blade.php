@@ -50,19 +50,23 @@
                 </button>
             </div>
 
-            <div class="relative border rounded-lg overflow-hidden m-4" style="height: 250px;">
-                <img src="{{ asset("storage/snapshots/{$privateIp}.png") }}" alt="Snapshot" class="h-full w-full object-contain">
-                <div class="absolute top-0 bottom-0 left-1/2 w-[1px] bg-gray-200"></div>
-                <div class="absolute bottom-2 left-2 text-sm text-gray-700 bg-white bg-opacity-75 px-2 py-1 rounded">
-                    {{ $deviceInfo1 }}
+            <div class="flex border rounded-lg overflow-hidden m-4 h-[250px]">
+                <div class="w-1/2 relative">
+                    <img src="{{ asset("storage/snapshots/{$privateIp}.png") }}" alt="Snapshot" class="h-full w-full object-contain">
+                    <div class="absolute top-0 bottom-0 left-1/2 w-[1px] bg-gray-200"></div>
+                </div>
+                <div class="w-1/2 p-4 flex items-center justify-center text-sm text-gray-700">
+                    <pre class="whitespace-pre-wrap">{{ $deviceInfo1 }}</pre>
                 </div>
             </div>
 
-            <div class="relative border rounded-lg overflow-hidden m-4" style="height: 250px;">
-                <img src="{{ asset("storage/snapshots/{$privateIp}-s.png") }}" alt="Snapshot" class="h-full w-full object-contain">
-                <div class="absolute top-0 bottom-0 left-1/2 w-[1px] bg-gray-200"></div>
-                <div class="absolute bottom-2 left-2 text-sm text-gray-700 bg-white bg-opacity-75 px-2 py-1 rounded">
-                    {{ $deviceInfo2 }}
+            <div class="flex border rounded-lg overflow-hidden m-4 h-[250px]">
+                <div class="w-1/2 relative">
+                    <img src="{{ asset("storage/snapshots/{$privateIp}-s.png") }}" alt="Snapshot" class="h-full w-full object-contain">
+                    <div class="absolute top-0 bottom-0 left-1/2 w-[1px] bg-gray-200"></div>
+                </div>
+                <div class="w-1/2 p-4 flex items-center justify-center text-sm text-gray-700">
+                    <pre class="whitespace-pre-wrap">{{ $deviceInfo2 }}</pre>
                 </div>
             </div>
 
