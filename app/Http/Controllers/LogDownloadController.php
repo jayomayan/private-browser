@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
-use App\Helpers\LogDownloader;
+use App\Helpers\helpers;
 
 class LogDownloadController extends Controller
 {
@@ -26,7 +26,7 @@ class LogDownloadController extends Controller
         ]);
 
         try {
-            $output = LogDownloader::downloadLogs(
+            $output = helpers::downloadLogs(
                 $data['ip'],
                 $data['username'] ?? 'admin',
                 $data['password'] ?? 'admin'
