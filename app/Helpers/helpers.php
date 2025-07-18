@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\Log;
 if (!function_exists('download_logs')) {
 function download_logs($ip, $username = 'admin', $password = 'admin')
 {
-    $scriptPath = base_path('node-scripts/download-logs.cjs');
-
+    #$scriptPath = base_path('node-scripts/download-logs.cjs');
+    $scriptPath = ('/var/www/toolbox/node-scripts/download-logs.cjs');
     $command = "node $scriptPath $ip $username $password";
 
     Log::info($scriptPath);
