@@ -3,7 +3,7 @@
 if (!function_exists('download_logs')) {
     function download_logs($ip, $username = 'admin', $password = 'admin')
     {
-        $scriptPath = base_path('node-scripts/download-logs.js');
+        $scriptPath = base_path('node-scripts/download-logs.cjs');
         $command = escapeshellcmd("node $scriptPath $ip $username $password");
 
         $output = null;
