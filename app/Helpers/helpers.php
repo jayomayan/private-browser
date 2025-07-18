@@ -1,12 +1,9 @@
 <?php
 
-namespace App\Helpers;
-
-class LogDownloader
-{
-    public static function downloadLogs($ip, $username = 'admin', $password = 'admin')
+if (!function_exists('download_logs')) {
+    function download_logs($ip, $username = 'admin', $password = 'admin')
     {
-        $scriptPath = base_path('node-scripts/download-logs.js'); // Adjust path if needed
+        $scriptPath = base_path('node-scripts/download-logs.js');
         $command = escapeshellcmd("node $scriptPath $ip $username $password");
 
         $output = null;
