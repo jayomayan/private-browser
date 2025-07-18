@@ -22,8 +22,7 @@ class LogDownloadController extends Controller
         );
 
         return response($csvContent)
-            ->header('Content-Type', 'text/csv')
-            ->header('Content-Disposition', 'attachment; filename="exported.csv"');
+        ->header('Content-Type', 'text/plain');
 
     } catch (\Throwable $e) {
         return response()->json([
