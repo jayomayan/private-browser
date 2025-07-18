@@ -6,30 +6,30 @@ use Illuminate\Http\Request;
 
 class LogDownloadController extends Controller
 {
-    public function download(Request $request)
-    {
-        $data = $request->validate([
-            'ip'       => ['required', 'ip'],
-            'username' => ['nullable', 'string'],
-            'password' => ['nullable', 'string'],
-        ]);
+ public function download(Request $request)
+{
+    $data = $request->validate([
+        'ip' => ['required', 'ip'],
+        'username' => ['nullable', 'string'],
+        'password' => ['nullable', 'string'],
+    ]);
 
-        try {
-            $output = download_logs(
-                $data['ip'],
-                $data['username'] ?? 'admin',
-                $data['password'] ?? 'admin'
-            );
+    try {
+        $csvContent = download_logs(
+            $data['ip'],
+            $data['username'] ?? 'admin',
+            $data['password'] ?? 'admin'
+        );
 
-            return response()->json([
-                'message' => 'Download successful.',
-                'output'  => $output
-            ]);
-        } catch (\Throwable $e) {
-            return response()->json([
-                'error'  => 'Download failed',
-                'detail' => $e->getMessage()
-            ], 500);
-        }
+        return response($csvContent)
+            ->header('Content-Type', 'text/csv')
+            ->header('Content-Disposition', 'attachment; filename="exported.csv"');
+
+    } catch (\Throwable $e) {
+        return response()->json([
+            'error' => 'Download failed',
+            'detail' => $e->getMessage()
+        ], 500);
     }
+}
 }
