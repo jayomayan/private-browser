@@ -8,7 +8,6 @@ const USERNAME = args[1] || 'admin';
 const PASSWORD = args[2] || 'admin';
 
 const LOGIN_URL = `http://${IP}/`;
-const DOWNLOAD_DIR = "/home/jay_omayan/log_downloader/downloads";
 
 (async () => {
     const browser = await chromium.launch({ headless: true });
@@ -19,7 +18,7 @@ const DOWNLOAD_DIR = "/home/jay_omayan/log_downloader/downloads";
     });
 
     const page = await context.newPage();
-    console.log("✅ Opening login page");
+    console.error("✅ Opening login page");
     await page.goto(LOGIN_URL);
     await page.waitForTimeout(2000);
 
@@ -29,22 +28,24 @@ const DOWNLOAD_DIR = "/home/jay_omayan/log_downloader/downloads";
     await frame.fill('input[name="T1"]', USERNAME);
     await frame.fill('input[name="T2"]', PASSWORD);
     await frame.click('button:has-text("Login")');
-    console.log("✅ Logged in successfully.");
+    console.error("✅ Logged in successfully.");
 
     await page.goto(`http://${IP}/cgi-bin/historyfault_info`);
-    console.log("✅ Navigated to logs page.");
+    console.error("✅ Navigated to logs page.");
 
     await page.click(".ts_dropbtn");
-    console.log("✅ Clicked 'Export Data' button.");
+    console.error("✅ Clicked 'Export Data' button.");
 
     const [ download ] = await Promise.all([
         page.waitForEvent('download'),
         page.click('a[data-type="csv"]')
     ]);
 
-    const downloadPath = `${DOWNLOAD_DIR}/exported-${IP.replace(/\./g, '_')}.csv`;
-    await download.saveAs(downloadPath);
-    console.log(`✅ CSV download completed: ${downloadPath}`);
+    const tempPath = await download.path();
+    const content = fs.readFileSync(tempPath, 'utf8');
+
+    // Output CSV content to stdout
+    console.log(content);
 
     await browser.close();
 })();
