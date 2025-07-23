@@ -25,6 +25,24 @@ class PrivateBrowser extends Component
     {
         $this->connectionError = '';
 
+        //Get Access Token
+        $token = getAerisToken();
+        if (!$token) {
+            $this->connectionError = 'Failed to retrieve Aeris token.';
+            return;
+        } else {
+            $result = searchAerisByLabel('PH010010', $token);
+            if ($result) {
+                $events = getAerisEventsByImsi('454003050573862', $token);
+                $latestEventId = getLatestAerisEventId($events);
+                $eventDetails = getAerisEventDetails($latestEventId, $token);
+                Log::error('Aeris search failed'. $eventDetails['event']['terminal_ip']);
+            } else {
+                Log::error('Aeris search failed');
+            }
+        }
+
+
         $validator = Validator::make(
             ['privateIp' => $this->privateIp],
             ['privateIp' => 'required|ip']
