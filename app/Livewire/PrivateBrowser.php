@@ -48,6 +48,10 @@ class PrivateBrowser extends Component
                         }
                         Log::info('Aeris events: ' . print_r($events, true));
                         $latestEventId = getLatestAerisEventId($events);
+                        if (!$latestEventId) {
+                            $this->connectionError = 'No events found for the given Site ID.';
+                            return;
+                        }
                         $eventDetails = getAerisEventDetails($latestEventId, $token);
                         $this->privateIp = $eventDetails['terminal_ip'];
                         $this->networkName = $eventDetails['visited_nw'];
