@@ -34,7 +34,7 @@ class PrivateBrowser extends Component
                 //Get Access Token
                 $token = getAerisToken();
                 if (!$token) {
-                    $this->connectionError = 'Failed to retrieve Aeris token.';
+                    $this->connectionError = 'Failed to retrieve token.';
                     return;
                 } else {
                     $result = searchAerisByLabel($this->siteId, $token);
@@ -42,6 +42,11 @@ class PrivateBrowser extends Component
                         Log::info('Aeris search failed: ' . print_r($result, true));
                         $Imsi = $result['subscriptions'][0]['imsi'];
                         $events = getAerisEventsByImsi($Imsi, $token);
+                        if (!$events) {
+                            $this->connectionError = 'Failed to retrieve events for the given Site ID.';
+                            return;
+                        }
+                        Log::info('Aeris events: ' . print_r($events, true));
                         $latestEventId = getLatestAerisEventId($events);
                         $eventDetails = getAerisEventDetails($latestEventId, $token);
                         $this->privateIp = $eventDetails['terminal_ip'];
