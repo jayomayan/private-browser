@@ -40,7 +40,13 @@
         @else
             <div class="mb-4 flex items-center justify-between">
                 <p class="text-sm text-gray-600">
-                    Connected to: <span class="font-semibold">{{ $privateIp }}</span>
+                    Connected to:
+                        <span class="font-semibold">
+                            {{ $privateIp }}
+                            @if (!empty($networkName))
+                                (Network: {{ $networkName }})
+                            @endif
+                        </span>
                 </p>
                 <button
                     wire:click="disconnect"
