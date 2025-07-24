@@ -41,9 +41,8 @@ class PrivateBrowser extends Component
                     Log::info('Aeris events: ' . print_r($result, true));
                     if ($result) {
                         if  (
-                                !isset($results['subscriptions'][0]['imsi']) ||
-                                !is_array($results['subscriptions']) ||
-                                count($results['subscriptions']) === 0
+                                empty($result['subscriptions']) ||
+                                $result['size'] === 0
                             )  {
                             $this->connectionError = 'No subscriptions found for the given Site ID or Site ID not found.';
                             return;
