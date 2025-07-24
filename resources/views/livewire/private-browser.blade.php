@@ -44,7 +44,7 @@
                         <span class="font-semibold">
                             {{ $privateIp }}
                             @if (!empty($networkName))
-                                (Network: {{ $networkName }})
+                                Site ID: {{ $siteId }} Network: {{ $networkName }}
                             @endif
                         </span>
                 </p>

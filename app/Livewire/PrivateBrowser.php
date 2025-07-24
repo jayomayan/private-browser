@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 class PrivateBrowser extends Component
 {
     public $privateIp = '';
+    public $siteId = '';
     public $networkName = '';
     public $isConnected = false;
     public $connectionError = '';
@@ -29,14 +30,14 @@ class PrivateBrowser extends Component
         // Starts with "PH"
          // Example: PH010010
         if (str_starts_with($this->privateIp, 'PH')) {
-                 $siteId = $this->privateIp;
+                 $this->siteId = $this->privateIp;
                 //Get Access Token
                 $token = getAerisToken();
                 if (!$token) {
                     $this->connectionError = 'Failed to retrieve Aeris token.';
                     return;
                 } else {
-                    $result = searchAerisByLabel($siteId, $token);
+                    $result = searchAerisByLabel($this->siteId, $token);
                     if ($result) {
                         Log::info('Aeris search failed: ' . print_r($result, true));
                         $Imsi = $result['subscriptions'][0]['imsi'];
@@ -61,13 +62,13 @@ class PrivateBrowser extends Component
         );
 
         if ($validator->fails()) {
-            $this->connectionError = 'Please enter a valid IP address.';
+            $this->connectionError = 'Please enter a valid Site ID or IP address.';
             return;
         }
 
         // Validate if it's a private IP
         if (!$this->isPrivateIp($this->privateIp)) {
-            $this->connectionError = 'Please enter a private IP address.';
+            $this->connectionError = 'Please enter a private Site ID or IP address.';
             return;
         }
 
