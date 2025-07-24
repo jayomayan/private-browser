@@ -37,6 +37,9 @@ class PrivateBrowser extends Component
                 $latestEventId = getLatestAerisEventId($events);
                 $eventDetails = getAerisEventDetails($latestEventId, $token);
                 Log::info('Aeris search failed: ' . print_r($eventDetails, true));
+                Log::info('Terminal IP: ' . $eventDetails['terminal_ip']);
+                Log::info('Network : ' . $eventDetails['visited_nw']);
+
             } else {
                 Log::error('Aeris search failed');
             }
