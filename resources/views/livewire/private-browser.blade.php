@@ -11,12 +11,12 @@
     <div class="p-6 bg-white rounded-lg shadow-md transition-all duration-200"
          wire:loading.class="blur-sm" wire:target="connect">
 
-        <h2 class="text-lg font-semibold mb-4">Private IP Browser</h2>
+        <h2 class="text-lg font-semibold mb-4">Site Browser</h2>
 
         @if (!$isConnected)
             <div class="mb-6">
                 <label for="privateIp" class="block text-sm font-medium text-gray-700 mb-1">
-                    Enter the Site Private IP:
+                    Enter the Site ID or Private IP:
                 </label>
                 <div class="flex">
                     <input
