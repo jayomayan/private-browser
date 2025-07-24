@@ -25,24 +25,30 @@ class PrivateBrowser extends Component
     {
         $this->connectionError = '';
 
-        //Get Access Token
-        $token = getAerisToken();
-        if (!$token) {
-            $this->connectionError = 'Failed to retrieve Aeris token.';
-            return;
-        } else {
-            $result = searchAerisByLabel('PH010010', $token);
-            if ($result) {
-                $events = getAerisEventsByImsi('454003050573862', $token);
-                $latestEventId = getLatestAerisEventId($events);
-                $eventDetails = getAerisEventDetails($latestEventId, $token);
-                Log::info('Aeris search failed: ' . print_r($eventDetails, true));
-                Log::info('Terminal IP: ' . $eventDetails['terminal_ip']);
-                Log::info('Network : ' . $eventDetails['visited_nw']);
-
-            } else {
-                Log::error('Aeris search failed');
-            }
+        // Starts with "PH"
+         // Example: PH010010
+        if (str_starts_with($this->privateIp, 'PH')) {
+                 $siteId = $this->privateIp;
+                //Get Access Token
+                $token = getAerisToken();
+                if (!$token) {
+                    $this->connectionError = 'Failed to retrieve Aeris token.';
+                    return;
+                } else {
+                    $result = searchAerisByLabel($siteId, $token);
+                    if ($result) {
+                        $Imsi = $result['imsi'];
+                        $events = getAerisEventsByImsi($Imsi, $token);
+                        $latestEventId = getLatestAerisEventId($events);
+                        $eventDetails = getAerisEventDetails($latestEventId, $token);
+                        $this->privateIp = $eventDetails['terminal_ip'];
+                        //Log::info('Aeris search failed: ' . print_r($eventDetails, true));
+                        //Log::info('Terminal IP: ' . $eventDetails['terminal_ip']);
+                        //Log::info('Network : ' . $eventDetails['visited_nw']);
+                    } else {
+                        Log::error('Aeris search failed');
+                    }
+                }
         }
 
 
