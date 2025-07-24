@@ -38,17 +38,12 @@ class PrivateBrowser extends Component
                     return;
                 } else {
                     $result = searchAerisByLabel($this->siteId, $token);
-
-                    if (empty($results['subscriptions'])) {
-                        // Subscriptions are empty
-                        Log::info('No subscriptions found.');
-                    } else {
-                        // Subscriptions exist
-                        $imsi = $results['subscriptions'][0]['imsi'];
-                        Log::info('IMSI: ' . $imsi);
-                    }
                     if ($result) {
-                        if (empty($results['subscriptions'])) {
+                        if  (
+                                !isset($results['subscriptions']) ||
+                                !is_array($results['subscriptions']) ||
+                                count($results['subscriptions']) === 0
+                            )  {
                             $this->connectionError = 'No subscriptions found for the given Site ID or Site ID not found.';
                             return;
                         }
