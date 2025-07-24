@@ -38,7 +38,7 @@ class PrivateBrowser extends Component
                     return;
                 } else {
                     $result = searchAerisByLabel($this->siteId, $token);
-                    Log::info('Aeris events: ' . print_r($$result, true));
+                    Log::info('Aeris events: ' . print_r($result, true));
                     if ($result) {
                         if  (
                                 !isset($results['subscriptions'][0]['imsi']) ||
