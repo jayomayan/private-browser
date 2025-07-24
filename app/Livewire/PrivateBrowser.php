@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 class PrivateBrowser extends Component
 {
     public $privateIp = '';
+    public $networkName = '';
     public $isConnected = false;
     public $connectionError = '';
     public $connectionUrl = '';
@@ -43,6 +44,7 @@ class PrivateBrowser extends Component
                         $latestEventId = getLatestAerisEventId($events);
                         $eventDetails = getAerisEventDetails($latestEventId, $token);
                         $this->privateIp = $eventDetails['terminal_ip'];
+                        $this->networkName = $eventDetails['visited_nw'];
                         //Log::info('Aeris search failed: ' . print_r($eventDetails, true));
                         Log::info('Terminal IP: ' . $eventDetails['terminal_ip']);
                         Log::info('Network : ' . $eventDetails['visited_nw']);
