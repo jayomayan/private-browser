@@ -40,7 +40,7 @@ class PrivateBrowser extends Component
                     $result = searchAerisByLabel($this->siteId, $token);
                     if ($result) {
                         if  (
-                                !isset($results['subscriptions']) ||
+                                !isset($results['subscriptions'][0]['imsi']) ||
                                 !is_array($results['subscriptions']) ||
                                 count($results['subscriptions']) === 0
                             )  {
