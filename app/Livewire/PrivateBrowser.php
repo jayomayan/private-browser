@@ -38,7 +38,7 @@ class PrivateBrowser extends Component
                     $result = searchAerisByLabel($siteId, $token);
                     if ($result) {
                         Log::info('Aeris search failed: ' . print_r($result, true));
-                        //$Imsi = $result['imsi'];
+                        $Imsi = $result['subscriptions'][0]['imsi'];
                         $events = getAerisEventsByImsi($Imsi, $token);
                         $latestEventId = getLatestAerisEventId($events);
                         $eventDetails = getAerisEventDetails($latestEventId, $token);
