@@ -55,6 +55,7 @@ class PrivateBrowser extends Component
                         }
                         Log::info('Aeris events: ' . print_r($events, true));
                         $latestEventId = getLatestAerisEventId($events);
+                        Log::info('Latest event: ' . print_r($latestEventId, true));
                         if (!$latestEventId) {
                             $this->connectionError = 'No events found for the given Site ID.';
                             return;
