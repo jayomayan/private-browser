@@ -62,6 +62,10 @@ class PrivateBrowser extends Component
                         }
                         $eventDetails = getAerisEventDetails($latestEventId, $token);
                         $this->privateIp = $eventDetails['terminal_ip'];
+                        if (!$this->privateIp) {
+                            $this->connectionError = 'No terminal IP found for the given Site ID.';
+                            return;
+                        }
                         $this->networkName = $eventDetails['visited_nw'];
                         //Log::info('Aeris search failed: ' . print_r($eventDetails, true));
                         Log::info('Terminal IP: ' . $eventDetails['terminal_ip']);
