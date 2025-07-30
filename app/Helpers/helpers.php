@@ -6,7 +6,7 @@ use Carbon\Carbon;
 
 // Function to process logs from a device
 if (!function_exists('processLogs')) {
-    function processLogs($ip)
+function processLogs($ip)
 {
     $device = \App\Models\Device::where('ip', $ip)->first();
 
@@ -17,24 +17,36 @@ if (!function_exists('processLogs')) {
 
     try {
         $logString = download_logs($ip);
-        $lines = explode("\n", $logString);
+        $lines = explode("\n", trim($logString));
+
+        // Skip header row
+        $lines = array_slice($lines, 1);
 
         foreach ($lines as $line) {
             $parts = str_getcsv($line);
-            if (count($parts) < 3) continue;
 
-            [$id, $datetime, $event, $message] = array_pad($parts, 4, null);
-            $timestamp = \Carbon\Carbon::parse($datetime);
+            if (count($parts) < 4) continue;
+
+            [$no, $datetime, $event, $alarmName] = array_map('trim', $parts);
+
+            try {
+                $timestamp = \Carbon\Carbon::parse($datetime);
+            } catch (\Exception $e) {
+                \Log::warning("Invalid datetime: {$datetime} for device {$ip}");
+                continue;
+            }
+
+            $message = $event . ($alarmName ? ' - ' . $alarmName : '');
 
             $logData = [
                 'ip'      => $device->ip,
                 'site_id' => $device->site_id,
                 'date'    => $timestamp->toDateString(),
                 'time'    => $timestamp->toTimeString(),
-                'message' => trim(($event ?? '') . ($message ? ' - ' . $message : '')),
+                'message' => $message,
             ];
 
-            // Check if log already exists
+            // Prevent duplicates
             $exists = \App\Models\DeviceLog::where([
                 'ip'      => $logData['ip'],
                 'date'    => $logData['date'],
