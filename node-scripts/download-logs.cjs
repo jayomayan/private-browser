@@ -18,7 +18,7 @@ const LOGIN_URL = `http://${IP}/`;
     });
 
     const page = await context.newPage();
-    console.error("✅ Opening login page");
+    //console.error("✅ Opening login page");
     await page.goto(LOGIN_URL);
     await page.waitForTimeout(2000);
 
@@ -28,13 +28,13 @@ const LOGIN_URL = `http://${IP}/`;
     await frame.fill('input[name="T1"]', USERNAME);
     await frame.fill('input[name="T2"]', PASSWORD);
     await frame.click('button:has-text("Login")');
-    console.error("✅ Logged in successfully.");
+    //console.error("✅ Logged in successfully.");
 
     await page.goto(`http://${IP}/cgi-bin/historyfault_info`);
-    console.error("✅ Navigated to logs page.");
+    //console.error("✅ Navigated to logs page.");
 
     await page.click(".ts_dropbtn");
-    console.error("✅ Clicked 'Export Data' button.");
+    //console.error("✅ Clicked 'Export Data' button.");
 
     const [ download ] = await Promise.all([
         page.waitForEvent('download'),
