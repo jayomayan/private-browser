@@ -9,6 +9,7 @@ if (!function_exists('processLogs')) {
 function processLogs($ip)
 {
     $device = \App\Models\Device::where('ip', $ip)->first();
+    Log::info(print_r($device, true));
 
     if (!$device) {
         \Log::warning("Device with IP {$ip} not found.");
