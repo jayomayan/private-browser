@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class DeviceLog extends Model
 {
-    protected $fillable = ['ip', 'date', 'time', 'message'];
+    protected $fillable = ['ip', 'date', 'time', 'message', 'site_id'];
 
     // Optional: reverse relationship
     public function device()
