@@ -47,6 +47,8 @@ function processLogs($ip)
                 'message' => $message,
             ];
 
+            \Log::info('Creating log with data:', $logData);
+
             // Prevent duplicates
             $exists = \App\Models\DeviceLog::where([
                 'ip'      => $logData['ip'],
