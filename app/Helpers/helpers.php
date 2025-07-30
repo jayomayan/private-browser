@@ -1,7 +1,57 @@
 <?php
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use App\Models\DeviceLog;
+use Carbon\Carbon;
 
+// Function to process logs from a device
+if (!function_exists('processLogs')) {
+    function processLogs($ip)
+{
+    $device = \App\Models\Device::where('ip', $ip)->first();
+
+    if (!$device) {
+        \Log::warning("Device with IP {$ip} not found.");
+        return;
+    }
+
+    try {
+        $logString = download_logs($ip);
+        $lines = explode("\n", $logString);
+
+        foreach ($lines as $line) {
+            $parts = str_getcsv($line);
+            if (count($parts) < 3) continue;
+
+            [$id, $datetime, $event, $message] = array_pad($parts, 4, null);
+            $timestamp = \Carbon\Carbon::parse($datetime);
+
+            $logData = [
+                'ip'      => $device->ip,
+                'site_id' => $device->site_id,
+                'date'    => $timestamp->toDateString(),
+                'time'    => $timestamp->toTimeString(),
+                'message' => trim(($event ?? '') . ($message ? ' - ' . $message : '')),
+            ];
+
+            // Check if log already exists
+            $exists = \App\Models\DeviceLog::where([
+                'ip'      => $logData['ip'],
+                'date'    => $logData['date'],
+                'time'    => $logData['time'],
+                'message' => $logData['message'],
+            ])->exists();
+
+            if (!$exists) {
+                \App\Models\DeviceLog::create($logData);
+            }
+        }
+
+    } catch (\Exception $e) {
+        \Log::error("Error processing logs from {$ip}: " . $e->getMessage());
+    }
+}
+}
 
 // Function to download logs from a remote server using Node.js script
 if (!function_exists('download_logs')) {
