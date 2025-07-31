@@ -15,7 +15,7 @@ class PushToBigQueryJob implements ShouldQueue
 
     protected $logData;
 
-    public function __construct(DeviceLog $logData)
+    public function __construct(array $logData)
     {
         $this->log = $logData;
     }
