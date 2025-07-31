@@ -13,11 +13,11 @@ class PushToBigQueryJob implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $log;
+    protected $logData;
 
-    public function __construct(DeviceLog $log)
+    public function __construct(DeviceLog $logData)
     {
-        $this->log = $log;
+        $this->log = $logData;
     }
 
     public function handle()

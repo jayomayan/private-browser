@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OktaOIDCController;
-use App\Jobs\PushToBigQueryJob;
 
 Route::get('/login/okta', [OktaOIDCController::class, 'login']);
 
@@ -30,11 +29,3 @@ Route::middleware([
 });
 
 
-
-
-Route::get('/test-job', function () {
-    $log = \App\Models\DeviceLog::latest()->first(); // or create dummy data
-    dispatch(new PushToBigQueryJob($log));
-
-    return 'Job dispatched!';
-});
