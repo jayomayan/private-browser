@@ -15,15 +15,15 @@ class PushToBigQueryJob implements ShouldQueue
 
     protected $logData;
 
-    public function __construct(array $logData)
+    public function __construct($logData)
     {
-        $this->log = $logData;
+        $this->logData = $logData;
     }
 
     public function handle()
     {
 
-        Log::info('PushToBigQueryJob executed for log ID: ' . $this->log->id);
+        Log::info('PushToBigQueryJob executed for log ID: ' . $this->logData->id);
 
         $bigQuery = new BigQueryClient([
             'projectId' => env('GOOGLE_CLOUD_PROJECT_ID'),
@@ -35,16 +35,16 @@ class PushToBigQueryJob implements ShouldQueue
 
         $insertResponse = $table->insertRows([
             [
-                'ip'      => $this->log->ip,
-                'site_id' => $this->log->site_id,
-                'date'    => $this->log->date,
-                'time'    => $this->log->time,
-                'message' => $this->log->message,
+                'ip'      => $this->logData->ip,
+                'site_id' => $this->logData->site_id,
+                'date'    => $this->logData->date,
+                'time'    => $this->logData->time,
+                'message' => $this->logData->message,
             ],
         ]);
 
         if ($insertResponse->isSuccessful()) {
-            \Log::info('Log pushed to BigQuery: ' . $this->log->id);
+            \Log::info('Log pushed to BigQuery: ' . $this->logData->id);
         } else {
             \Log::error('BigQuery insert failed: ', $insertResponse->failedRows());
         }
