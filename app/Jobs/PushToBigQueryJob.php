@@ -23,7 +23,7 @@ class PushToBigQueryJob implements ShouldQueue
     public function handle()
     {
 
-        Log::info('PushToBigQueryJob executed for log ID: ' . $this->logData->id);
+        Log::info('PushToBigQueryJob executed for log IP: ' . $this->logData['ip']);
 
         $bigQuery = new BigQueryClient([
             'projectId' => env('GOOGLE_CLOUD_PROJECT_ID'),
