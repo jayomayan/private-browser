@@ -58,7 +58,7 @@ function processLogs($ip)
             if (!$exists) {
                 \App\Models\DeviceLog::create($logData);
                 // Push to BigQuery
-                dispatch(new \App\Jobs\PushToBigQueryJob($log));
+                dispatch(new \App\Jobs\PushToBigQueryJob($logData));
             }
         }
 

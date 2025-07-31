@@ -7,6 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class PushToBigQueryJob implements ShouldQueue
 {
@@ -21,6 +22,9 @@ class PushToBigQueryJob implements ShouldQueue
 
     public function handle()
     {
+
+        Log::info('PushToBigQueryJob executed for log ID: ' . $this->log->id);
+
         $bigQuery = new BigQueryClient([
             'projectId' => env('GOOGLE_CLOUD_PROJECT_ID'),
             'keyFilePath' => env('GOOGLE_APPLICATION_CREDENTIALS'),
