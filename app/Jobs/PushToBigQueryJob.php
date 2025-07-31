@@ -35,11 +35,13 @@ class PushToBigQueryJob implements ShouldQueue
 
         $insertResponse = $table->insertRows([
             [
-                'ip'      => $this->logData['ip'],
-                'site_id' => $this->logData['site_id'],
-                'date'    => $this->logData['date'],
-                'time'    => $this->logData['time'],
-                'message' => $this->logData['message'],
+                'data' => [
+                    'ip'      => $this->logData['ip'],
+                    'site_id' => $this->logData['site_id'],
+                    'date'    => $this->logData['date'],
+                    'time'    => $this->logData['time'],
+                    'message' => $this->logData['message'],
+                ],
             ],
         ]);
 
