@@ -23,7 +23,7 @@ class PushToBigQueryJob implements ShouldQueue
     {
         $bigQuery = new BigQueryClient([
             'projectId' => env('GOOGLE_CLOUD_PROJECT_ID'),
-            'keyFilePath' => storage_path('gcp/service-account.json'),
+            'keyFilePath' => env('GOOGLE_APPLICATION_CREDENTIALS'),
         ]);
 
         $dataset = $bigQuery->dataset(env('BQ_DATASET'));
