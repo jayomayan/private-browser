@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "ftap-cmmp-dw-prod",
+  "private_key_id": "dc21615f6ea5d6d8ab134c94420ab060b4d43e0b",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCLOSid5hxuvBdJ\nIzd0nIjiAQoRN2Eqm+9rK69Gy+W3ieD1O3PbMtB6BzzkkOS7w9G4PPX8QR57hFoP\n50fyNNXdYwvwu6p5N/CsG/nWF69QG6+eljVf0dIBgWMRbf9Mz6NfWzpHbgD1XF5+\n1QHnM0WFnoNQKBWE9eYfDEFL8auS9ELwjdonVvssMIKjD7vlFjpThJc7Y4v9gRib\n6WWVm82UoG2CMSPFeHDTsoAafeMjAgTH8zf4r8ZRFztngzLXwVMPwKJ/gi1cwmmg\npWEqyQI5zXdcpSrz2g4rYy2MRgYDYmcstWxzVjDE6wb5NbZMCIpBqrD7+ucWCHsX\nBHY7+mjxAgMBAAECggEACr4GjwZoF7g+ILfNqdsBKdUUModgITJGezGz9MW7TBng\nqHNlqVpmoR/JWEaAy6ccmbdkcIoSwMuRymvZTow6mzou++xzBybklFcVRCpwLcFx\nH86twB63skOKQhhHbGUSEUO//65ydvwhU256lt0LJnf4YFkzbd6uWqNur14uk6hV\nlONtpITEnTqXKBrcvVMnCM3Z9f0gPpdLLlBwp11qlr2BeNowAtA6GNJhvCSA+0yk\nw9JlyeZeiLGvWhcU8oSqou0a+O5l2YtA0AsyFRrftnoPZwRCo4tSq0HHAIxlB5Kz\nbInoXs5tanosVhd3b4VOrPuraBRvgsQeUREKuwp3sQKBgQDA82qL/zjFfjMrP3fv\ncRnIi6+4vd3cn//QPYMN5GLjmFpYTNbzVLpGVVJB4hi8P7uqsAJIiVnlfKjLN80K\nqzsh+/T7/+SdlGp86e2XUOOih3Zx2D8xnAdL+LKL9+dpZR9Lqbg2MDRGT63dxwiL\nxLinBrgBoKKOP/hLy1UZTmXquQKBgQC4t1zqWfaWrZY/n4hQrVmj6iLRnT9NzJNA\n693IOtGQiPt2gUUI46aEDCqG0N3jH3zFXtixWmTUKFg2Guhp1HsYz3bbpAJROaaK\nXxw5D1iRiEGjcHGVq+n8H0CltuBCbkHxd8JAKUxnlV5uZnHJmB67qhqYlov+NN2K\n4Vp/8ahz+QKBgQCcfM7M/BFvGwsk6DS9XV0r6R57FoH5jUpL+ZdwjOom7ElZk/hB\nIVZx9IDiLh0hkA8EP/uaGMtv88pyBq+lF3q99Tqbps4jf1teM9sd/dyg1HybmGao\nNYM1el5UZpqoP/tBwkRErpO28qhwVhv4P3QDAs/5ge5UsE0QK7i47Xx7AQKBgQCs\n0cF48VqodxhPxm6/LLDljzWscDa+D1zmLMd/gqh3VfIPWbrBKlysxsUzBU/UI62U\n67xJko0rgeOmG16/RTE2cUR/Et+oJwwOAhZhvF3dK2JeC+H5arKsVIEjigofnRDN\nXoK7jOgTMcj7+ZUUS+LVKb1gbdnkqIluWpFViz9T4QKBgQCM15aERmb1h0VAW2BP\nMo/fvHK4Ovrl4ndlO1SCdX2ZNglR7aFUVg4AVrIGKZDK6QX0d5Go4kuCdo41qV/F\nR66fYuE3cTyfy2cSTkJflKiT0e2kHBggjPyK/psgAFXeDfiYXPTnAcMdP10xrm5j\nTVYQW2qwOWKCxXbeIztTCPGI1w==\n-----END PRIVATE KEY-----\n",
+  "client_email": "ftap-da-sa@ftap-cmmp-dw-prod.iam.gserviceaccount.com",
+  "client_id": "110265644445020645047",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/ftap-da-sa%40ftap-cmmp-dw-prod.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
