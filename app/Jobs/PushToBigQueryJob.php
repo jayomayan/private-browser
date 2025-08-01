@@ -29,7 +29,7 @@ class PushToBigQueryJob implements ShouldQueue
         ]);
 
         $dataset = $bigQuery->dataset(env('BQ_DATASET','da_cmmp_raw_layer'));
-        $table = $dataset->table(env('BQ_TABLE','device_logs'));
+        $table = $dataset->table(env('BQ_TABLE','rectifier_logs'));
 
         $insertResponse = $table->insertRows([
             [
