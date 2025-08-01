@@ -9,7 +9,6 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 return function (Schedule $schedule) {
-    $schedule->command('logs:download')->everyFifteenMinutes()->withoutOverlapping(30);
+    $schedule->command('logs:download')->everyFifteenMinutes();
 };
 
-$schedule->command('logs:download')->everyFifteenMinutes();
