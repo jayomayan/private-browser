@@ -28,7 +28,7 @@ class PushToBigQueryJob implements ShouldQueue
             'keyFilePath' => env('GOOGLE_APPLICATION_CREDENTIALS','/var/www/secure_keys/sa-private-key.json'),
         ]);
 
-        $dataset = $bigQuery->dataset(env('BQ_DATASET','ftap-cmmp-dw-prod'));
+        $dataset = $bigQuery->dataset(env('BQ_DATASET','da_cmmp_raw_layer'));
         $table = $dataset->table(env('BQ_TABLE','device_logs'));
 
         $insertResponse = $table->insertRows([
