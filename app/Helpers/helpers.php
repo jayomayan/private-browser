@@ -30,6 +30,8 @@ function processLogs($ip)
 
             [$no, $datetime, $event, $alarmName] = array_map('trim', $parts);
 
+            Log::debug("Raw time received from device {$device->ip}: " . json_encode($datetime));
+
             try {
                 $timestamp = \Carbon\Carbon::parse($datetime);
             } catch (\Exception $e) {
