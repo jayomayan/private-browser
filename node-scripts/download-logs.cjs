@@ -20,7 +20,7 @@ const LOGIN_URL = `http://${IP}/`;
     const page = await context.newPage();
     //console.error("✅ Opening login page");
     await page.goto(LOGIN_URL);
-    await page.waitForTimeout(2000);
+    await page.waitForTimeout(3000);
 
     const frame = await page.frame({ name: "I1" });
     if (!frame) throw new Error("❌ Could not find iframe 'I1'.");
