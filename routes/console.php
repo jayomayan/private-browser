@@ -8,7 +8,8 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Schedule::command('logs:download')
+return function (Schedule $schedule) {
+    $schedule->command('logs:download')
              ->everyFifteenMinutes()
              ->withoutOverlapping(30);
-
+};
