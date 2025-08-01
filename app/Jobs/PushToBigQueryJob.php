@@ -24,12 +24,12 @@ class PushToBigQueryJob implements ShouldQueue
     {
 
         $bigQuery = new BigQueryClient([
-            'projectId' => env('GOOGLE_CLOUD_PROJECT_ID'),
-            'keyFilePath' => env('GOOGLE_APPLICATION_CREDENTIALS'),
+            'projectId' => env('GOOGLE_CLOUD_PROJECT_ID','ftap-cmmp-dw-prod'),
+            'keyFilePath' => env('GOOGLE_APPLICATION_CREDENTIALS','/var/www/secure_keys/sa-private-key.json'),
         ]);
 
-        $dataset = $bigQuery->dataset(env('BQ_DATASET'));
-        $table = $dataset->table(env('BQ_TABLE'));
+        $dataset = $bigQuery->dataset(env('BQ_DATASET','ftap-cmmp-dw-prod'));
+        $table = $dataset->table(env('BQ_TABLE','device_logs'));
 
         $insertResponse = $table->insertRows([
             [
