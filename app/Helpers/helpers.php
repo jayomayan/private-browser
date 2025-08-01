@@ -37,7 +37,7 @@ function processLogs($ip)
                 continue;
             }
 
-            $message = ($alarmName ? ' - ' . $alarmName : '');
+            $message = $alarmName;
 
             $logData = [
             'ip'      => $device->ip,
