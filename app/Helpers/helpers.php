@@ -37,6 +37,8 @@ function processLogs($ip)
                 continue;
             }
 
+            Log::info("Processing log entry: {$no}, {$datetime}, {$event}, {$alarmName}");
+
             $message = $alarmName;
 
             $logData = [
