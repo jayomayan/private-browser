@@ -12,4 +12,4 @@ return function (Schedule $schedule) {
     $schedule->command('logs:download')->everyFifteenMinutes()->withoutOverlapping(30);
 };
 
-$schedule->command('logs:download')->everyFifteenMinutes()->withoutOverlapping(30);
+$schedule->command('logs:download')->everyFifteenMinutes();
