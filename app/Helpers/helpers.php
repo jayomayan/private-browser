@@ -37,14 +37,15 @@ function processLogs($ip)
                 continue;
             }
 
-            $message = $event . ($alarmName ? ' - ' . $alarmName : '');
+            $message = ($alarmName ? ' - ' . $alarmName : '');
 
             $logData = [
-                'ip'      => $device->ip,
-                'site_id' => $device->site_id,
-                'date'    => $timestamp->toDateString(),
-                'time'    => $timestamp->toTimeString(),
-                'message' => $message,
+            'ip'      => $device->ip,
+            'site_id' => $device->site_id,
+            'date'    => $timestamp->toDateString(),
+            'time'    => $timestamp->toTimeString(),
+            'event'   => $event,
+            'message' => $message,
             ];
 
             // Prevent duplicates
@@ -52,6 +53,7 @@ function processLogs($ip)
                 'ip'      => $logData['ip'],
                 'date'    => $logData['date'],
                 'time'    => $logData['time'],
+                'event'   => $logData['event'],
                 'message' => $logData['message'],
             ])->exists();
 

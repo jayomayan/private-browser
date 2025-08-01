@@ -38,6 +38,7 @@ class PushToBigQueryJob implements ShouldQueue
                     'site_id' => $this->logData['site_id'],
                     'date'    => $this->logData['date'],
                     'time'    => $this->logData['time'],
+                    'event'   => $this->logData['event'],
                     'message' => $this->logData['message'],
                 ],
             ],
