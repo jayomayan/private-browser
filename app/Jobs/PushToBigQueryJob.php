@@ -45,9 +45,9 @@ class PushToBigQueryJob implements ShouldQueue
         ]);
 
         if ($insertResponse->isSuccessful()) {
-            \Log::info('Log pushed to BigQuery: ' . $this->logData['site_id']);
+          #  \Log::info('Log pushed to BigQuery: ' . $this->logData['site_id']);
         } else {
-            \Log::error('BigQuery insert failed: ', $insertResponse->failedRows());
+           # \Log::error('BigQuery insert failed: ', $insertResponse->failedRows());
         }
     }
 }
