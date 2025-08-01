@@ -9,6 +9,7 @@ if (!function_exists('processLogs')) {
 function processLogs($ip)
 {
     $device = \App\Models\Device::where('ip', $ip)->first();
+   # Log::info("Processing logs for device: {$device->site_id}");
 
     if (!$device) {
         \Log::warning("Device with IP {$ip} not found.");
@@ -19,13 +20,11 @@ function processLogs($ip)
         $logString = download_logs($ip);
         $lines = explode("\n", trim($logString));
 
-        foreach ($lines as $index => $line) {
-            $parts = str_getcsv($line);
+        // Skip header row
+        $lines = array_slice($lines, 1);
 
-            // Skip the header row or any malformed row
-            if ($index === 0 && isset($parts[1]) && strtolower(trim($parts[1])) === 'time') {
-                continue;
-            }
+        foreach ($lines as $line) {
+            $parts = str_getcsv($line);
 
             if (count($parts) < 4) continue;
 
@@ -41,13 +40,15 @@ function processLogs($ip)
             }
 
             $logData = [
-                'ip'      => $device->ip,
-                'site_id' => $device->site_id,
-                'date'    => $timestamp->toDateString(),
-                'time'    => $timestamp->toTimeString(),
-                'event'   => $event,
-                'message' => $alarmName,
+            'ip'      => $device->ip,
+            'site_id' => $device->site_id,
+            'date'    => $timestamp->toDateString(),
+            'time'    => $timestamp->toTimeString(),
+            'event'   => $event,
+            'message' => $alarmName,
             ];
+
+           # Log::info("Processing log entry: {$logData['ip']}, {$logData['date']}, {$logData['event']}, {$logData['message']}");
 
             // Prevent duplicates
             $exists = \App\Models\DeviceLog::where([
@@ -60,6 +61,7 @@ function processLogs($ip)
 
             if (!$exists) {
                 \App\Models\DeviceLog::create($logData);
+                // Push to BigQuery
                 dispatch(new \App\Jobs\PushToBigQueryJob($logData));
             }
         }
