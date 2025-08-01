@@ -37,8 +37,6 @@ function processLogs($ip)
                 continue;
             }
 
-            Log::info("Processing log entry: {$no}, {$datetime}, {$event}, {$alarmName}");
-
             $logData = [
             'ip'      => $device->ip,
             'site_id' => $device->site_id,
@@ -47,6 +45,8 @@ function processLogs($ip)
             'event'   => $event,
             'message' => $alarmName,
             ];
+
+            Log::info("Processing log entry: {$logData['ip']}, {$logData['date']}, {$logData['event']}, {$logData['message']}");
 
             // Prevent duplicates
             $exists = \App\Models\DeviceLog::where([
