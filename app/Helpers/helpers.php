@@ -39,15 +39,13 @@ function processLogs($ip)
 
             Log::info("Processing log entry: {$no}, {$datetime}, {$event}, {$alarmName}");
 
-            $message = $alarmName;
-
             $logData = [
             'ip'      => $device->ip,
             'site_id' => $device->site_id,
             'date'    => $timestamp->toDateString(),
             'time'    => $timestamp->toTimeString(),
             'event'   => $event,
-            'message' => $message,
+            'message' => $alarmName,
             ];
 
             // Prevent duplicates
