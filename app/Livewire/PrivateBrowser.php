@@ -118,7 +118,7 @@ class PrivateBrowser extends Component
                 '--no-sandbox',
                 '--disable-dev-shm-usage',
                 '--disable-crash-reporter',             // ✅ stops crashpad
-                '--user-data-dir=/tmp/chrome-data',     // ✅ avoids /var/www/.local
+                '--user-data-dir=/tmp/chrome-data-' . uniqid(),     // ✅ avoids /var/www/.local
                 '--no-first-run',                       // ✅ suppress setup dialogs
                 '--no-default-browser-check'
             ])
