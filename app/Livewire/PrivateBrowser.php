@@ -146,7 +146,8 @@ class PrivateBrowser extends Component
                 '--ignore-certificate-errors' // ← this was being skipped before
             ])
             ->windowSize(1280, 720)
-            ->timeout(60)
+            ->timeout(120) // Browsershot timeout (in seconds)
+            ->setOption('protocolTimeout', 120000) // Puppeteer protocol timeout in ms
             ->save(storage_path("app/public/snapshots/{$this->privateIp}-s.png"));
 
         } catch (\Exception $e) {
