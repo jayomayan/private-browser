@@ -15,12 +15,13 @@ class OktaOIDCController extends Controller
 
         try {
             $oidc = new OpenIDConnectClient(
-                env('OKTA_BASE_URL'),
-                env('OKTA_CLIENT_ID'),
-                env('OKTA_CLIENT_SECRET')
+                env('OKTA_BASE_URL','https://frontiertowersphilippines.okta.com'),
+                env('OKTA_CLIENT_ID','0oaqb5gvgvAgEpK89697'),
+                env('OKTA_CLIENT_SECRET','N1TFa5JzzQTDXGOqzJxPVwSw36MegDXYSkAGq_MbYE-ibOnBrV_za5kQAMxDB1Kt')
             );
 
-            $oidc->setRedirectURL(env('OKTA_REDIRECT_URI'));
+
+            $oidc->setRedirectURL(env('OKTA_REDIRECT_URI, 'https://toolbox.frontiertowersphilippines.com/login/okta'));
             $oidc->addScope(['openid', 'profile', 'email']);
             $oidc->authenticate(); // Will redirect or handle token
 
