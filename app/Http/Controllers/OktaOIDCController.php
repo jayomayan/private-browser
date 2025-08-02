@@ -21,7 +21,7 @@ class OktaOIDCController extends Controller
             );
 
 
-            $oidc->setRedirectURL(env('OKTA_REDIRECT_URI, 'https://toolbox.frontiertowersphilippines.com/login/okta'));
+            $oidc->setRedirectURL(env('OKTA_REDIRECT_URI', 'https://toolbox.frontiertowersphilippines.com/login/okta'));
             $oidc->addScope(['openid', 'profile', 'email']);
             $oidc->authenticate(); // Will redirect or handle token
 
