@@ -37,8 +37,6 @@ function processLogs($ip)
                     continue;
                 }
 
-                //\Log::info("DateTime: {$timestamp} ");
-
                 $logData = [
                 'ip'      => $device->ip,
                 'site_id' => $device->site_id,
