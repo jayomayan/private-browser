@@ -31,7 +31,6 @@ function processLogs($ip)
 
             [$no, $datetime, $event, $alarmName] = array_map('trim', $parts);
 
-            \Log::info("DateTime: {$datetime} ");
 
             try {
                 $timestamp = \Carbon\Carbon::parse($datetime);
@@ -39,6 +38,8 @@ function processLogs($ip)
                 \Log::warning("Invalid datetime: {$datetime} for device {$ip}");
                 continue;
             }
+
+            \Log::info("DateTime: {$timestamp} ");
 
             $logData = [
             'ip'      => $device->ip,
