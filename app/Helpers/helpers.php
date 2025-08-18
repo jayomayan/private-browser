@@ -7,7 +7,7 @@ use Carbon\Carbon;
 // Function to process logs from a device
 if (!function_exists('processLogs')) {
 function processLogs($ip)
-{
+    {
     $device = \App\Models\Device::where('ip', $ip)->first();
     Log::info("Processing logs for device: {$device->site_id}");
 
@@ -16,62 +16,74 @@ function processLogs($ip)
         return;
     }
 
-    try {
-        $logString = download_logs($ip);
-        $lines = explode("\n", trim($logString));
+    if ($device->name=="Enetek") {
+        // Specific processing for Enetek devices
+      try {
+            $logString = download_logs($ip);
+            $lines = explode("\n", trim($logString));
+            // Skip header row
+            $lines = array_slice($lines, 5);
 
-        // Skip header row
-        $lines = array_slice($lines, 5);
+            foreach ($lines as $line) {
+                $parts = str_getcsv($line);
+                // \Log::info("Parts: " . json_encode($parts) . " for device {$ip}");
 
-        foreach ($lines as $line) {
-            $parts = str_getcsv($line);
-            // \Log::info("Parts: " . json_encode($parts) . " for device {$ip}");
+                if (count($parts) < 4) continue;
+                [$no, $datetime, $event, $alarmName] = array_map('trim', $parts);
+                try {
+                    $timestamp = \Carbon\Carbon::parse($datetime);
+                } catch (\Exception $e) {
+                    \Log::warning("Invalid datetime: {$datetime} for device {$ip}");
+                    continue;
+                }
 
-            if (count($parts) < 4) continue;
+                \Log::info("DateTime: {$timestamp} ");
 
-            [$no, $datetime, $event, $alarmName] = array_map('trim', $parts);
+                $logData = [
+                'ip'      => $device->ip,
+                'site_id' => $device->site_id,
+                'date'    => $timestamp->toDateString(),
+                'time'    => $timestamp->toTimeString(),
+                'event'   => $event,
+                'message' => $alarmName,
+                ];
 
+            # Log::info("Processing log entry: {$logData['ip']}, {$logData['date']}, {$logData['event']}, {$logData['message']}");
 
-            try {
-                $timestamp = \Carbon\Carbon::parse($datetime);
+                // Prevent duplicates
+                $exists = \App\Models\DeviceLog::where([
+                    'ip'      => $logData['ip'],
+                    'date'    => $logData['date'],
+                    'time'    => $logData['time'],
+                    'event'   => $logData['event'],
+                    'message' => $logData['message'],
+                ])->exists();
+
+                if (!$exists) {
+                    \App\Models\DeviceLog::create($logData);
+                    // Push to BigQuery
+                    dispatch(new \App\Jobs\PushToBigQueryJob($logData));
+                }
+            }
+
             } catch (\Exception $e) {
-                \Log::warning("Invalid datetime: {$datetime} for device {$ip}");
-                continue;
+                \Log::error("Error processing logs from {$ip}: " . $e->getMessage());
             }
 
-            \Log::info("DateTime: {$timestamp} ");
+    } elseif ($device->name=="Vnt") {
+       // Specific processing for Vnt devices
 
-            $logData = [
-            'ip'      => $device->ip,
-            'site_id' => $device->site_id,
-            'date'    => $timestamp->toDateString(),
-            'time'    => $timestamp->toTimeString(),
-            'event'   => $event,
-            'message' => $alarmName,
-            ];
+    } elseif ($device->name=="Eltek") {
+        // Specific processing for Eltek devices
 
-           # Log::info("Processing log entry: {$logData['ip']}, {$logData['date']}, {$logData['event']}, {$logData['message']}");
+    } elseif ($device->name=="Huawei") {
+        // Specific processing for Huawei devices
 
-            // Prevent duplicates
-            $exists = \App\Models\DeviceLog::where([
-                'ip'      => $logData['ip'],
-                'date'    => $logData['date'],
-                'time'    => $logData['time'],
-                'event'   => $logData['event'],
-                'message' => $logData['message'],
-            ])->exists();
-
-            if (!$exists) {
-                \App\Models\DeviceLog::create($logData);
-                // Push to BigQuery
-                dispatch(new \App\Jobs\PushToBigQueryJob($logData));
-            }
-        }
-
-    } catch (\Exception $e) {
-        \Log::error("Error processing logs from {$ip}: " . $e->getMessage());
     }
-}
+
+
+
+    }
 }
 
 // Function to download logs from a remote server using Node.js script
