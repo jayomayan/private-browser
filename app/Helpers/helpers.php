@@ -70,6 +70,55 @@ function processLogs($ip)
 
     } elseif ($device->name=="Vnt") {
        // Specific processing for Vnt devices
+          // Specific processing for Enetek devices
+      try {
+            $logString = download_logs2($ip);
+            $lines = explode("\n", trim($logString));
+            // Skip header row
+            $lines = array_slice($lines, 5);
+
+            foreach ($lines as $line) {
+                $parts = str_getcsv($line);
+                // \Log::info("Parts: " . json_encode($parts) . " for device {$ip}");
+
+                if (count($parts) < 4) continue;
+                [$no, $datetime, $event, $alarmName] = array_map('trim', $parts);
+                try {
+                    $timestamp = \Carbon\Carbon::parse($datetime);
+                } catch (\Exception $e) {
+                    \Log::warning("Invalid datetime: {$datetime} for device {$ip}");
+                    continue;
+                }
+
+                $logData = [
+                'ip'      => $device->ip,
+                'site_id' => $device->site_id,
+                'date'    => $timestamp->toDateString(),
+                'time'    => $timestamp->toTimeString(),
+                'event'   => $event,
+                'message' => $alarmName,
+                ];
+
+            # Log::info("Processing log entry: {$logData['ip']}, {$logData['date']}, {$logData['event']}, {$logData['message']}");
+
+                // Prevent duplicates
+                $exists = \App\Models\DeviceLog::where([
+                    'ip'      => $logData['ip'],
+                    'date'    => $logData['date'],
+                    'time'    => $logData['time'],
+                    'event'   => $logData['event'],
+                    'message' => $logData['message'],
+                ])->exists();
+
+                if (!$exists) {
+                    \App\Models\DeviceLog::create($logData);
+                    // Push to BigQuery
+                    dispatch(new \App\Jobs\PushToBigQueryJob($logData));
+                }
+            }
+            } catch (\Exception $e) {
+                \Log::error("Error processing logs from {$ip}: " . $e->getMessage());
+            }
 
     } elseif ($device->name=="Eltek") {
         // Specific processing for Eltek devices
@@ -79,9 +128,27 @@ function processLogs($ip)
 
     }
 
-
-
     }
+}
+
+// for VNT devices
+if (!function_exists('download_logs2')) {
+function download_logs2($ip, $username = 'admin', $password = 'admin')
+{
+    $scriptPath = base_path('node-scripts/download-logs-vnt.cjs');
+    $command = escapeshellcmd("node $scriptPath $ip $username $password");
+
+    $output = null;
+    $returnVar = null;
+
+    exec($command . ' 2>&1', $output, $returnVar);
+
+    if ($returnVar !== 0) {
+        throw new \Exception("Download script failed:\n" . implode("\n", $output));
+    }
+
+    return implode("\n", $output); // now this is raw CSV content
+}
 }
 
 // Function to download logs from a remote server using Node.js script

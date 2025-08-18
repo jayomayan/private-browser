@@ -41,8 +41,17 @@ const LOGIN_URL = `http://${IP}/`;
         console.error("✅ Logged in successfully.");
 
         await page.getByRole('cell', { name: 'Logs' }).getByRole('img').click();
-        await page.locator('#logDatetimeFrom').fill('2025-08-06');
-        await page.locator('#logDatetimeTo').fill('2025-08-07');
+
+        const fromInput = page.locator('#logDatetimeFrom');
+        await fromInput.waitFor({ state: 'visible', timeout: 10000 });
+        await fromInput.fill('2025-08-06');
+
+        const toInput = page.locator('#logDatetimeTo');
+        await toInput.waitFor({ state: 'visible', timeout: 10000 });
+        await toInput.fill('2025-08-07');
+
+        //await page.locator('#logDatetimeFrom').fill('2025-08-06');
+        //await page.locator('#logDatetimeTo').fill('2025-08-07');
 
         const downloadPromise = page.waitForEvent('download');
         await page.getByRole('button', { name: 'Download' }).click();
