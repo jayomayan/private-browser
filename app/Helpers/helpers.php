@@ -21,7 +21,7 @@ function processLogs($ip)
         $lines = explode("\n", trim($logString));
 
         // Skip header row
-        $lines = array_slice($lines, 1);
+        $lines = array_slice($lines, 4);
 
         foreach ($lines as $line) {
             $parts = str_getcsv($line);
