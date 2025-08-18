@@ -61,7 +61,14 @@ class PrivateBrowser extends Component
                             return;
                         }
                         $eventDetails = getAerisEventDetails($latestEventId, $token);
-                        $this->privateIp = $eventDetails['terminal_ip'];
+
+                        if (array_key_exists('terminal_ip', $eventDetails)) {
+                            $this->privateIp = $eventDetails['terminal_ip'];
+                        } else {
+                            $this->connectionError = 'No terminal IP found for the given Site ID.';
+                            return;
+                        }
+
                         if (!$this->privateIp) {
                             $this->connectionError = 'No terminal IP found for the given Site ID.';
                             return;
@@ -139,7 +146,8 @@ class PrivateBrowser extends Component
                 '--ignore-certificate-errors' // ← this was being skipped before
             ])
             ->windowSize(1280, 720)
-            ->timeout(60)
+            ->timeout(120) // Browsershot timeout (in seconds)
+            ->setOption('protocolTimeout', 120000) // Puppeteer protocol timeout in ms
             ->save(storage_path("app/public/snapshots/{$this->privateIp}-s.png"));
 
         } catch (\Exception $e) {
