@@ -40,6 +40,10 @@ const LOGIN_URL = `http://${IP}/`;
         await page.getByRole('button', { name: 'Login' }).click();
         console.error("✅ Logged in successfully.");
 
+        await page.locator('#companyLogo').waitFor({ state: 'visible', timeout: 100000 });
+
+        console.log("✅ Company Logo Shown.");
+
         await page.getByRole('cell', { name: 'Logs' }).getByRole('img').click();
 
         const fromInput = page.locator('#logDatetimeFrom');
