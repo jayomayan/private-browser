@@ -25,10 +25,13 @@ function processLogs($ip)
 
         foreach ($lines as $line) {
             $parts = str_getcsv($line);
+            \Log::info("Parts: {$parts} for device {$ip}");
 
             if (count($parts) < 4) continue;
 
             [$no, $datetime, $event, $alarmName] = array_map('trim', $parts);
+
+            \Log::info("DateTime: {$datetime} ");
 
             try {
                 $timestamp = \Carbon\Carbon::parse($datetime);
