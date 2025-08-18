@@ -43,11 +43,11 @@ const LOGIN_URL = `http://${IP}/`;
         await page.getByRole('cell', { name: 'Logs' }).getByRole('img').click();
 
         const fromInput = page.locator('#logDatetimeFrom');
-        await fromInput.waitFor({ state: 'visible', timeout: 10000 });
+        await fromInput.waitFor({ state: 'visible', timeout: 60000 });
         await fromInput.fill('2025-08-06');
 
         const toInput = page.locator('#logDatetimeTo');
-        await toInput.waitFor({ state: 'visible', timeout: 10000 });
+        await toInput.waitFor({ state: 'visible', timeout: 60000 });
         await toInput.fill('2025-08-07');
 
         //await page.locator('#logDatetimeFrom').fill('2025-08-06');
