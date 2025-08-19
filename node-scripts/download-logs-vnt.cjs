@@ -79,7 +79,24 @@ const LOGIN_URL = `http://${IP}/`;
         await page.locator('#eventLogDatetimeFrom').fill('2025-08-06');
         await page.locator('#eventLogDatetimeTo').fill('2025-08-07');
         await page.getByRole('button', { name: 'Download' }).click();
+
         console.error("✅ Event Logs Download triggered.");
+
+
+        await page.getByRole('cell', { name: 'Event Logs' }).click();
+        await page.locator('#eventLogDatetimeFrom').fill('2025-08-18');
+        await page.locator('#eventLogDatetimeTo').fill('2025-08-19');
+        const download1Promise = page.waitForEvent('download', { timeout: 120000 });
+        await page.getByRole('button', { name: 'Download' }).click();
+        console.log("✅ Download button clicked.");
+
+        await page.locator('table#loadingBar421', { hasText: 'File Downloaded.' })
+          .waitFor({ state: 'visible', timeout: 120000 });
+
+        const download1 = await download1Promise;
+        const tempPath1 = await download.path();
+        const content1 = fs.readFileSync(tempPath1, 'utf8');
+        console.log("✅ Logs Downloaded:", content1);
 
     } catch (err) {
         console.error("❌ Script Error:", err);
