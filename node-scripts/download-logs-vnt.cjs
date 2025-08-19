@@ -46,20 +46,24 @@ const LOGIN_URL = `http://${IP}/`;
         await page.waitForTimeout(30000);
 
         await page.getByRole('cell', { name: 'Logs' }).getByRole('img').click();
+        console.log("✅ Clicked Logs.");
 
         const fromInput = page.locator('#logDatetimeFrom');
         await fromInput.waitFor({ state: 'visible', timeout: 60000 });
         await fromInput.fill('2025-08-06');
+        console.log("✅ Filled 'From' Date.");
 
         const toInput = page.locator('#logDatetimeTo');
         await toInput.waitFor({ state: 'visible', timeout: 60000 });
         await toInput.fill('2025-08-07');
+        console.log("✅ Filled 'To' Date.");
 
         //await page.locator('#logDatetimeFrom').fill('2025-08-06');
         //await page.locator('#logDatetimeTo').fill('2025-08-07');
 
         const downloadPromise = page.waitForEvent('download');
         await page.getByRole('button', { name: 'Download' }).click();
+        console.log("✅ Download button clicked.");
         const download = await downloadPromise;
         const tempPath = await download.path();
         const content = fs.readFileSync(tempPath, 'utf8');
