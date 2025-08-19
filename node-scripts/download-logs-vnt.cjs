@@ -43,6 +43,7 @@ const LOGIN_URL = `http://${IP}/`;
         await page.locator('#companyLogo').waitFor({ state: 'visible', timeout: 100000 });
 
         console.log("✅ Company Logo Shown.");
+        await page.waitForTimeout(30000);
 
         await page.getByRole('cell', { name: 'Logs' }).getByRole('img').click();
 
