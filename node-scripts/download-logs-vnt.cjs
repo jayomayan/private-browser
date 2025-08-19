@@ -64,6 +64,12 @@ const LOGIN_URL = `http://${IP}/`;
         const downloadPromise = page.waitForEvent('download', { timeout: 60000 });
         await page.getByRole('button', { name: 'Download' }).click();
         console.log("✅ Download button clicked.");
+
+        await page.locator('table#loadingBar411', { hasText: 'File Downloaded.' })
+          .waitFor({ state: 'visible', timeout: 60000 });
+
+        console.log('✅ UI shows file downloaded.');
+
         const download = await downloadPromise;
         const tempPath = await download.path();
         const content = fs.readFileSync(tempPath, 'utf8');
