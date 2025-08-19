@@ -76,14 +76,14 @@ const LOGIN_URL = `http://${IP}/`;
         console.log("✅ Logs Downloaded:", content);
 
         await page.getByRole('cell', { name: 'Event Logs' }).click();
-        const fromInput = page.locator('#eventLogDatetimeFrom');
-        await fromInput.waitFor({ state: 'visible', timeout: 60000 });
-        await fromInput.fill('2025-08-06');
+        const fromInput1 = page.locator('#eventLogDatetimeFrom');
+        await fromInput1.waitFor({ state: 'visible', timeout: 60000 });
+        await fromInput1.fill('2025-08-06');
         console.log("✅ Filled 'From' Date.");
 
-        const toInput = page.locator('#eventLogDatetimeTo');
-        await toInput.waitFor({ state: 'visible', timeout: 60000 });
-        await toInput.fill('2025-08-07');
+        const toInput1 = page.locator('#eventLogDatetimeTo');
+        await toInput1.waitFor({ state: 'visible', timeout: 60000 });
+        await toInput1.fill('2025-08-07');
         console.log("✅ Filled 'To' Date.");
 
         const download1Promise = page.waitForEvent('download', { timeout: 120000 });
