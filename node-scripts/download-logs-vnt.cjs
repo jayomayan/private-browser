@@ -61,7 +61,7 @@ const LOGIN_URL = `http://${IP}/`;
         //await page.locator('#logDatetimeFrom').fill('2025-08-06');
         //await page.locator('#logDatetimeTo').fill('2025-08-07');
 
-        const downloadPromise = page.waitForEvent('download', { timeout: 60000 });
+        const downloadPromise = page.waitForEvent('download', { timeout: 120000 });
         await page.getByRole('button', { name: 'Download' }).click();
         console.log("✅ Download button clicked.");
 
