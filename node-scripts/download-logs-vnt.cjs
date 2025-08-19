@@ -76,22 +76,26 @@ const LOGIN_URL = `http://${IP}/`;
         console.log("✅ Logs Downloaded:", content);
 
         await page.getByRole('cell', { name: 'Event Logs' }).click();
-        await page.locator('#eventLogDatetimeFrom').fill('2025-08-06');
-        await page.locator('#eventLogDatetimeTo').fill('2025-08-07');
-        await page.getByRole('button', { name: 'Download' }).click();
+        const fromInput = page.locator('#eventLogDatetimeFrom');
+        await fromInput.waitFor({ state: 'visible', timeout: 60000 });
+        await fromInput.fill('2025-08-06');
+        console.log("✅ Filled 'From' Date.");
 
-        console.error("✅ Event Logs Download triggered.");
+        const toInput = page.locator('#eventLogDatetimeTo');
+        await toInput.waitFor({ state: 'visible', timeout: 60000 });
+        await toInput.fill('2025-08-07');
+        console.log("✅ Filled 'To' Date.");
 
-
-        await page.getByRole('cell', { name: 'Event Logs' }).click();
-        await page.locator('#eventLogDatetimeFrom').fill('2025-08-18');
-        await page.locator('#eventLogDatetimeTo').fill('2025-08-19');
         const download1Promise = page.waitForEvent('download', { timeout: 120000 });
         await page.getByRole('button', { name: 'Download' }).click();
         console.log("✅ Download button clicked.");
 
-        await page.locator('table#loadingBar421', { hasText: 'File Downloaded.' })
+        console.error("✅ Event Logs Download triggered.");
+
+         await page.locator('table#loadingBar411', { hasText: 'File Downloaded.' })
           .waitFor({ state: 'visible', timeout: 120000 });
+
+        console.log('✅ UI shows file downloaded.');
 
         const download1 = await download1Promise;
         const tempPath1 = await download.path();
