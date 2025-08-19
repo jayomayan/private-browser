@@ -66,7 +66,7 @@ const LOGIN_URL = `http://${IP}/`;
         console.log("✅ Download button clicked.");
 
         await page.locator('table#loadingBar411', { hasText: 'File Downloaded.' })
-          .waitFor({ state: 'visible', timeout: 60000 });
+          .waitFor({ state: 'visible', timeout: 120000 });
 
         console.log('✅ UI shows file downloaded.');
 
