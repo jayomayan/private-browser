@@ -43,15 +43,8 @@ const LOGIN_URL = `http://${IP}/`;
 
         console.error("✅ Logged in successfully.");
 
-        // wait for post-login UI inside the same frame
-        await f1.getByRole('link', { name: 'System Config' }).waitFor({ state: 'visible', timeout: 60000 });
 
-        console.error("✅ Post-login UI is visible.");
-
-        // navigate
-        await f1.getByRole('link', { name: 'System Config' }).click();
-        await f1.getByRole('link', { name: 'Network Config' }).click();
-
+        await page.goto(`http://${IP}/cgi-bin/network_set`, { timeout: 30000 });
         console.error("✅ Navigated to Network Configuration page.");
 
         // ----- inner iframe inside I1 -----
