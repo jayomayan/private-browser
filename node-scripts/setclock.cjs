@@ -44,13 +44,13 @@ const LOGIN_URL = `http://${IP}/`;
         console.error("✅ Logged in successfully.");
 
         // wait for post-login UI inside the same frame
-        await f1.getByRole('link', { name: /system\s*config/i }).waitFor({ state: 'visible', timeout: 60000 });
+        await f1.getByRole('link', { name: 'System Config' }).waitFor({ state: 'visible', timeout: 60000 });
 
         console.error("✅ Post-login UI is visible.");
 
         // navigate
-        await f1.getByRole('link', { name: /system\s*config/i }).click();
-        await f1.getByRole('link', { name: /network\s*config/i }).click();
+        await f1.getByRole('link', { name: 'System Config' }).click();
+        await f1.getByRole('link', { name: 'Network Config' }).click();
 
         console.error("✅ Navigated to Network Configuration page.");
 
