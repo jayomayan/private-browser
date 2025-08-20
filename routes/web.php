@@ -26,6 +26,10 @@ Route::middleware([
     Route::get('/snmp-walk', function () {
         return view('snmp-walk');
     })->name('snmp-walk');
+
+    Route::get('/device-ntp', function () {
+        return view('snmp-walk');
+    })->name('snmp-walk');
 });
 
 
