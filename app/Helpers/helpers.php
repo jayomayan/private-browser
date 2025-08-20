@@ -133,7 +133,7 @@ function processLogs($ip)
 
 // for VNT devices
 if (!function_exists('download_logs2')) {
-function download_logs2($ip, $username = 'admin', $password = 'admin')
+function download_logs2($ip, $username = 'admin', $password = 'admin@123')
 {
     $scriptPath = base_path('node-scripts/download-logs-vnt.cjs');
     $command = escapeshellcmd("node $scriptPath $ip $username $password");
