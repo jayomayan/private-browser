@@ -65,11 +65,9 @@
         {{-- Output --}}
         @if (!empty($results))
             <div class="border rounded-lg p-4 bg-gray-50">
-                <h3 class="font-medium text-gray-700 mb-2">Results:</h3>
+                <h3 class="font-medium text-gray-700 mb-2">Result:</h3>
                 <ul class="space-y-1 text-sm text-gray-800">
-                    @foreach ($results as $result)
-                        <li><strong>{{ $result['oid'] }}</strong> = {{ $result['value'] }}</li>
-                    @endforeach
+                    <li>{{ $results }}</li>
                 </ul>
             </div>
         @endif

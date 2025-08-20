@@ -17,8 +17,8 @@ class DeviceNTP extends Component
          $this->reset(['error', 'output', 'results']);
 
         // Basic validation (adjust as you like)
-        if (!filter_var($this->host, FILTER_VALIDATE_IP) && !preg_match('/^[a-z0-9\.\-]+$/i', $this->host)) {
-            $this->error = 'Invalid host (must be IP or hostname).';
+        if (isPrivateIp($this->host) ) {
+            $this->error = 'Invalid host (must be a public IP or valid hostname).';
             return;
         }
         if (empty($this->device_brand)) {

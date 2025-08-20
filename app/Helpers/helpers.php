@@ -4,6 +4,31 @@ use Illuminate\Support\Facades\Http;
 use App\Models\DeviceLog;
 use Carbon\Carbon;
 
+
+if (!function_exists('isPrivateIp')) {
+    function isPrivateIp($ip)
+    {
+        // Check if IP is in private ranges
+        $privateRanges = [
+            '10.0.0.0|10.255.255.255',     // 10.0.0.0/8
+            '172.16.0.0|172.31.255.255',   // 172.16.0.0/12
+            '192.168.0.0|192.168.255.255', // 192.168.0.0/16
+            '127.0.0.0|127.255.255.255'    // localhost
+        ];
+
+        $ip = ip2long($ip);
+
+        foreach ($privateRanges as $range) {
+            list($start, $end) = explode('|', $range);
+            if ((ip2long($start) <= $ip) && ($ip <= ip2long($end))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+
 // Function to process logs from a device
 if (!function_exists('processLogs')) {
 function processLogs($ip)
