@@ -159,6 +159,9 @@
             <x-responsive-nav-link href="{{ route('snmp-walk') }}" :active="request()->routeIs('snmp-walk')">
                 {{ __('SNMP Walk') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('device-ntp') }}" :active="request()->routeIs('device-ntp')">
+                {{ __('Device NTP') }}
+            </x-responsive-nav-link>
         </div>
 
         <!-- Responsive Settings Options -->
