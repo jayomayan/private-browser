@@ -7,7 +7,8 @@ use Livewire\Component;
 class DeviceNTP extends Component
 {
      public $error;
-
+     public $host;
+     public $device_brand;
 
      public function submit()
      {
