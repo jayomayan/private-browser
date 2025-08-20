@@ -18,7 +18,7 @@
                <!-- Host Input -->
     <div class="flex-1">
         <label for="host" class="block text-sm font-medium text-gray-700 mb-1">
-            Host (Hostname or IP Address)
+            Host (IP Address)
         </label>
         <input
             id="host"
@@ -51,9 +51,8 @@
     <div>
         <button
             wire:click="submit"
-            class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
-        >
-            Run SNMP Walk
+            class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
+            Configure NTP
         </button>
     </div>
 </div>

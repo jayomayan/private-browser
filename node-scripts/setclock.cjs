@@ -6,8 +6,7 @@ const path = require('path');
 // Get CLI arguments
 const args = process.argv.slice(2);
 const IP = args[0] || '10.194.67.249';
-const USERNAME = args[1] || 'admin';
-const PASSWORD = args[2] || 'admin';
+const BRAND = args[1] || 'Enetek';
 
 const LOGIN_URL = `http://${IP}/`;
 
