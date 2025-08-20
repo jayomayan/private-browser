@@ -33,41 +33,42 @@ const LOGIN_URL = `http://${IP}/`;
        console.error("✅ Opening login page...");
         await page.goto(LOGIN_URL, { timeout: 60000, waitUntil: 'domcontentloaded' });
 
-        // ----- outer iframe -----
-        const f1 = page.frameLocator('iframe[name="I1"]');
-
-        // login
-        await f1.getByRole('textbox', { name: /user\s*name/i }).fill('admin');
-        await f1.getByRole('textbox', { name: /password/i }).fill('admin');
-        await f1.getByRole('button',  { name: /login/i }).click();
-
+        // login page *does* use an iframe named I1
+        const login = page.frameLocator('iframe[name="I1"]');
+        await login.getByRole('textbox', { name: /user\s*name/i }).fill('admin');
+        await login.getByRole('textbox', { name: /password/i }).fill('admin');
+        await login.getByRole('button',  { name: /login/i }).click();
         console.error("✅ Logged in successfully.");
 
+        // go to Network Config (this page is NOT inside I1)
+        await page.goto(`http://${IP}/cgi-bin/network_set`, { timeout: 60000, waitUntil: 'domcontentloaded' });
 
-        await page.goto(`http://${IP}/cgi-bin/network_set`, { timeout: 30000 });
-        console.error("✅ Navigated to Network Configuration page.");
+        // wait for the form to be visible
+        const form = page.locator('form.layui-form[action="network_set"]');
+        await form.waitFor({ state: 'visible', timeout: 60000 });
+        console.error("✅ Network Configuration form is visible.");
 
-        // ----- inner iframe inside I1 -----
-        const f2 = f1.frameLocator('iframe[name="iframe"]');
+        // fill NTP server IPs
+        await form.locator('input[name="ntpserverip1"]').fill('10');
+        await form.locator('input[name="ntpserverip2"]').fill('10');
+        await form.locator('input[name="ntpserverip3"]').fill('0');
+        await form.locator('input[name="ntpserverip4"]').fill('63');
 
-        // fill NTP fields (wait for first input to be ready)
-        //await f2.locator('input[name="ntpserverip1"]').waitFor({ state: 'visible', timeout: 30000 });
-        console.error("✅ Network Configuration iframe is visible.");
+        // timezone
+        await form.locator('input[name="ntptimezone"]').fill('8');
 
-        await f2.locator('input[name="ntpserverip1"]').fill('10');
-        await f2.locator('input[name="ntpserverip2"]').fill('10');
-        await f2.locator('input[name="ntpserverip3"]').fill('0');
-        await f2.locator('input[name="ntpserverip4"]').fill('63');
+        console.error("✅ NTP fields set. Submitting...");
 
-        console.error("✅ NTP server IPs set successfully.");
+        // submit (note: target="iframe" means response loads into an iframe named "iframe")
+        await form.locator('input[type="submit"][name="submit"]').click();
 
-        await f2.locator('input[name="ntptimezone"]').click();
-        await f2.locator('input[name="ntptimezone"]').fill('8');
+        // optional: wait for the result iframe to load something
+        const resultFrame = page.frameLocator('iframe[name="iframe"]');
+        await resultFrame.locator('body').waitFor({ state: 'visible', timeout: 10000 }).catch(() => {});
+        // If the firmware shows a message, you can look for it here, e.g.:
+        // await resultFrame.getByText(/(success|saved|applied|ok)/i).first().waitFor({ timeout: 5000 }).catch(()=>{});
 
-        await f2.getByRole('button', { name: /submit/i }).click();
-
-        console.error("✅ NTP settings updated successfully.");
-
+        console.error("✅ NTP settings submitted.");
     } catch (err) {
         console.error("❌ Script Error:", err);
     } finally {
