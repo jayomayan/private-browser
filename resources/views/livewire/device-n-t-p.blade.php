@@ -40,22 +40,22 @@
             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
         >
             <option value="">-- Select a brand --</option>
-            <option value="axinple">Enetek</option>
-            <option value="cisco">VNT</option>
-            <option value="juniper">Eltek</option>
-            <option value="huawei">Huawei</option>
+            <option value="enetek">Enetek</option>
+            <option value="vnt" disabled>VNT</option>
+            <option value="eltek" disabled>Eltek</option>
+            <option value="huawei" disabled>Huawei</option>
         </select>
     </div>
 
     <!-- Button -->
-    <div>
-        <button
-            wire:click="submit"
-            class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
-            Configure NTP
-        </button>
-    </div>
-</div>
+        <div>
+                <button
+                    wire:click="submit"
+                    class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
+                    Configure NTP
+                </button>
+            </div>
+        </div>
 
             @if ($error)
                 <p class="text-sm text-red-600 mt-2">{{ $error }}</p>
