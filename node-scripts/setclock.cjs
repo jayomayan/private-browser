@@ -58,8 +58,7 @@ const LOGIN_URL = `http://${IP}/`;
         const f2 = f1.frameLocator('iframe[name="iframe"]');
 
         // fill NTP fields (wait for first input to be ready)
-        await f2.locator('input[name="ntpserverip1"]').waitFor({ state: 'visible', timeout: 30000 });
-
+        //await f2.locator('input[name="ntpserverip1"]').waitFor({ state: 'visible', timeout: 30000 });
         console.error("✅ Network Configuration iframe is visible.");
 
         await f2.locator('input[name="ntpserverip1"]').fill('10');
