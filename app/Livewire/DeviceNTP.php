@@ -15,6 +15,7 @@ class DeviceNTP extends Component
      public function submit()
      {
          $this->reset(['error', 'output', 'results']);
+        \Log::info($this->host);
 
         // Basic validation (adjust as you like)
         if (empty($this->host) || !isPrivateIp($this->host)) {
