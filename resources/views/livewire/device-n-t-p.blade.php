@@ -18,7 +18,7 @@
                <!-- Host Input -->
     <div class="flex-1">
         <label for="host" class="block text-sm font-medium text-gray-700 mb-1">
-            Host (IP Address)
+            Host (IP Address). You can enter a single IP or multiple IPs separated by commas.
         </label>
         <input
             id="host"
