@@ -64,8 +64,8 @@
 
         {{-- Output --}}
         @if ($results)
-            <table class="mt-3 w-full text-sm">
-                <thead><tr><th class="text-left">IP</th><th>Status</th><th>Message</th></tr></thead>
+            <table class="m-3 w-full text-sm">
+                <thead><tr><th class="text-left">IP</th><th class="text-left">Status</th><th class="text-left">Message</th></tr></thead>
                 <tbody>
                 @foreach ($results as $r)
                     <tr>

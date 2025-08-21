@@ -72,7 +72,8 @@ class DeviceNTP extends Component
                 $this->results[] = [
                     'ip'      => $ip,
                     'status'  => 'ok',
-                    'message' => $msg !== '' ? $msg : 'NTP configuration submitted successfully.',
+                    //'message' => $msg !== '' ? $msg : 'NTP configuration submitted successfully.',
+                    'message' => 'NTP configuration submitted successfully.',
                 ];
             } else {
                 $this->results[] = [
