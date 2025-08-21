@@ -63,14 +63,22 @@
         </div>
 
         {{-- Output --}}
-        @if (!empty($results))
-            <div class="border rounded-lg p-4 bg-gray-50">
-                <h3 class="font-medium text-gray-700 mb-2">Result:</h3>
-                <ul class="space-y-1 text-sm text-gray-800">
-                    <li>{{ $results }}</li>
-                </ul>
-            </div>
-        @endif
+        @if ($results)
+            <table class="mt-3 w-full text-sm">
+                <thead><tr><th class="text-left">IP</th><th>Status</th><th>Message</th></tr></thead>
+                <tbody>
+                @foreach ($results as $r)
+                    <tr>
+                    <td>{{ $r['ip'] }}</td>
+                    <td class="{{ $r['status']==='ok' ? 'text-green-600' : 'text-red-600' }}">
+                        {{ strtoupper($r['status']) }}
+                    </td>
+                    <td><pre class="whitespace-pre-wrap">{{ $r['message'] }}</pre></td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+            @endif
 
     </div>
 </div>
