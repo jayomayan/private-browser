@@ -44,7 +44,6 @@ class DevicesCrud extends Component
 
         $devices = Device::query()
             ->when($s !== '', function ($q) use ($s) {
-                // group OR conditions so they don't leak
                 $q->where(function ($qq) use ($s) {
                     $qq->where('ip', 'like', "%{$s}%")
                        ->orWhere('site_id', 'like', "%{$s}%")
