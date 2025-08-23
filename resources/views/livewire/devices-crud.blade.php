@@ -31,9 +31,9 @@
 </form>
 
     {{-- devices table --}}
-    <div class="overflow-x-auto">
+    <div class="py-1 overflow-x-auto rounded-lg">
       <table class="w-full min-w-full table-auto">
-        <thead class="bg-slate-50 text-left text-xs font-semibold uppercase text-slate-500">
+        <thead class="bg-gray-200 text-left text-xs font-semibold uppercase text-slate-500">
           <tr>
             <th class="px-2 py-2">ID</th>
             <th class="px-2 py-2">IP</th>
