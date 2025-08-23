@@ -35,21 +35,21 @@
       <table class="w-full min-w-full table-auto">
         <thead class="bg-slate-50 text-left text-xs font-semibold uppercase text-slate-500">
           <tr>
-            <th class="px-3 py-2">ID</th>
-            <th class="px-3 py-2">IP</th>
-            <th class="px-3 py-2">Site ID</th>
-            <th class="px-3 py-2">Name</th>
-            <th class="px-3 py-2">Actions</th>
+            <th class="px-2 py-2">ID</th>
+            <th class="px-2 py-2">IP</th>
+            <th class="px-2 py-2">Site ID</th>
+            <th class="px-2 py-2">Name</th>
+            <th class="px-2 py-2">Actions</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-100 text-sm">
           @forelse ($devices as $d)
             <tr class="odd:bg-white even:bg-slate-50/60 hover:bg-indigo-50/40">
-              <td class="px-3 py-2 font-medium text-slate-700">{{ $d->id }}</td>
-              <td class="px-3 py-2 tabular-nums">{{ $d->ip }}</td>
-              <td class="px-3 py-2">{{ $d->site_id }}</td>
-              <td class="px-3 py-2">{{ $d->name }}</td>
-              <td class="px-3 py-2">
+              <td class="px-2 py-1 font-medium text-slate-700">{{ $d->id }}</td>
+              <td class="px-2 py-1 tabular-nums">{{ $d->ip }}</td>
+              <td class="px-2 py-1">{{ $d->site_id }}</td>
+              <td class="px-2 py-1">{{ $d->name }}</td>
+              <td class="px-2 py-1">
                 <div class="flex gap-2">
                   <button wire:click="edit({{ $d->id }})"
                         class="inline-flex items-center justify-center rounded-md p-2 text-gray-600 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 hover:shadow-md hover:shadow-gray"
