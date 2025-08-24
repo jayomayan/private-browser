@@ -42,17 +42,16 @@ class DevicesCrud extends Component
     {
          $s = trim($this->search);
 
-       $devices = Device::query()
-            ->select(['id','ip','site_id','name'])
-            ->when($s !== '', fn($q) =>
-                $q->where(fn($qq) =>
+        $devices = Device::query()
+            ->when($s !== '', function ($q) use ($s) {
+                $q->where(function ($qq) use ($s) {
                     $qq->where('ip', 'like', "%{$s}%")
                        ->orWhere('site_id', 'like', "%{$s}%")
-                       ->orWhere('name', 'like', "%{$s}%")
-                )
-            )
+                       ->orWhere('name', 'like', "%{$s}%");
+                });
+            })
             ->orderByDesc('id')
-            ->simplePaginate(20); // try simplePaginate for speed
+            ->paginate(10);
 
         return view('livewire.devices-crud', compact('devices'));
     }
