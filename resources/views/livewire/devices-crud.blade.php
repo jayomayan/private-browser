@@ -212,12 +212,13 @@
         >Cancel</button>
 
         <button
-          wire:click="delete"
-          wire:loading.attr="disabled"
-          class="rounded-lg bg-rose-600 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-700 disabled:opacity-60"
-        >
-          <span wire:loading.remove>Delete</span>
-          <span wire:loading>Deleting…</span>
+            wire:click="delete"
+            wire:loading.attr="disabled"
+            wire:target="delete"
+            class="rounded-lg bg-rose-600 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-700 disabled:opacity-60"
+            >
+            <span wire:loading.remove wire:target="delete">Delete</span>
+            <span wire:loading wire:target="delete">Deleting…</span>
         </button>
       </div>
     </div>
