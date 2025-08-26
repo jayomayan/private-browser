@@ -31,7 +31,7 @@ Route::middleware([
         return view('device-ntp');
     })->name('device-ntp');
 
-    Route::get('/device-crud', function () {
+    Route::get('/devices', function () {
         return view('device-crud');
     })->name('device-crud');
 
