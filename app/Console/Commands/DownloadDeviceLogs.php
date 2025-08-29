@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use App\Models\Device;
 use Carbon\Carbon;
 
+
 class DownloadDeviceLogs extends Command
 {
     protected $signature = 'logs:download';
