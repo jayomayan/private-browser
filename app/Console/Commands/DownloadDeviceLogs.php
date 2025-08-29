@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\Device;
+use Carbon\Carbon;
 
 class DownloadDeviceLogs extends Command
 {
