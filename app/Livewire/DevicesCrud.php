@@ -153,6 +153,7 @@ class DevicesCrud extends Component
                             $row->site_id,
                             $row->name,
                             $row->created_at,
+                            $row->last_log_pulled_at,
                         ]);
                     }
                 });
