@@ -45,6 +45,7 @@
             <th class="px-2 py-2">IP</th>
             <th class="px-2 py-2">Site ID</th>
             <th class="px-2 py-2">Name</th>
+            <th class="px-2 py-2">Last Log Pulled</th>
             <th class="px-2 py-2">Actions</th>
           </tr>
         </thead>
@@ -55,6 +56,7 @@
               <td class="px-2 py-1 tabular-nums">{{ $d->ip }}</td>
               <td class="px-2 py-1">{{ $d->site_id }}</td>
               <td class="px-2 py-1">{{ $d->name }}</td>
+              <td class="px-2 py-1">{{ $d->last_log_pulled_at ? $d->last_log_pulled_at->format('Y-m-d H:i:s') : 'Never' }}</td>
               <td class="px-2 py-1">
                 <div class="flex gap-2">
                   <button wire:click="edit({{ $d->id }})"

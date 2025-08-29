@@ -17,6 +17,8 @@ class DownloadDeviceLogs extends Command
         foreach ($devices as $device) {
             try {
                 processLogs($device->ip);
+                $device->last_log_pulled_at = Carbon::now();
+                $device->save();
                 $this->info("✅ Processed: {$device->ip}");
             } catch (\Throwable $e) {
                 \Log::error("❌ Error processing {$device->ip}: " . $e->getMessage());
