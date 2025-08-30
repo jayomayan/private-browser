@@ -60,12 +60,10 @@
             </div>
 
             <div>
-                <button
-                    wire:click="submit"
-                    class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
-                >
+                <x-button
+                    wire:click="submit">
                     Run SNMP Walk
-                </button>
+                </x-button>
             </div>
 
             @if ($error)
