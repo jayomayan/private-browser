@@ -49,22 +49,55 @@
                 </nav>
             @endif
         </header>
-        <div class="absolute top-0 -z-10 h-full w-full bg-white"><div class="absolute bottom-auto left-auto right-0 top-0 h-[500px] w-[500px] -translate-x-[30%] translate-y-[20%] rounded-full bg-[rgba(173,109,244,0.5)] opacity-50 blur-[80px]"></div></div>
+<div class="absolute top-0 -z-10 h-full w-full bg-white">
+  <!-- Top Right Glow -->
+  <div class="absolute top-0 right-0 h-[500px] w-[500px]
+              -translate-x-[30%] translate-y-[20%]
+              rounded-full bg-[#BE1E2D]/50
+              blur-[80px]">
+  </div>
 
-        <div class="flex items-center justify-center w-full transition-opacity opacity-100 duration-750 lg:grow starting:opacity-0">
-            <main class="flex max-w-[335px] w-full flex-col-reverse lg:max-w-4xl lg:flex-row">
-                <div class="text-[13px] leading-[20px] flex-1 p-6 pb-12 lg:p-20 bg-white dark:bg-[#161615] dark:text-[#EDEDEC] shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d] rounded-bl-lg rounded-br-lg lg:rounded-tl-lg lg:rounded-br-none">
-                    <h1 class="mb-1 font-medium">Frontier Towers Associates Philippines - Toolbox</h1>
-                    <p class="mb-2 text-[#706f6c] dark:text-[#A1A09A]">A secure internal web application that provides network tools for checking connectivity. It enables authorized users to input private IP addresses and test access through an embedded browser, helping streamline diagnostics and troubleshooting within the network.</p>
-                </div>
-                <div class=" bg-white dark:bg-[#1D0002] relative lg:-ml-px -mb-px lg:mb-0 rounded-tr-lg rounded-br-lg   aspect-[335/376] lg:aspect-auto w-full lg:w-[438px] shrink-0 overflow-hidden flex items-center justify-center p-6">
+  <!-- Bottom Left Glow -->
+  <div class="absolute bottom-0 left-0 h-[1200px] w-[1200px]
+              translate-x-[-30%] translate-y-[30%]
+              rounded-full bg-[#FAAF40]/50
+              blur-[80px]">
+  </div>
+</div>
 
-                    <img src="{{ asset('assets/images/ftaplogo.jpg') }}" alt="FTAP Logo" class="max-w-full max-h-full object-contain">
 
-                    <div class="absolute inset-0 rounded-t-lg lg:rounded-t-none lg:rounded-r-lg shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]"></div>
-                </div>
-            </main>
-        </div>
+
+<div class="flex items-center justify-center w-full transition-opacity opacity-100 duration-750 lg:grow starting:opacity-0">
+  <!-- Glass Wrapper -->
+  <main class="flex max-w-[335px] w-full flex-col-reverse lg:max-w-4xl lg:flex-row
+              bg-white/30 dark:bg-[#161615]/40 backdrop-blur-md
+              border border-white/30 dark:border-white/10
+              shadow-lg shadow-black/10
+              rounded-2xl overflow-hidden">
+
+    <!-- Left section -->
+    <div class="text-[13px] leading-[20px] flex-1 p-6 pb-12 lg:p-20 dark:text-[#EDEDEC]">
+      <h1 class="mb-1 font-medium">
+        Frontier Towers Associates Philippines - Toolbox
+      </h1>
+      <p class="mb-2 text-[#706f6c] dark:text-[#A1A09A]">
+        A secure internal web application that provides network tools for checking connectivity.
+        It enables authorized users to input private IP addresses and test access through an
+        embedded browser, helping streamline diagnostics and troubleshooting within the network.
+      </p>
+    </div>
+
+    <!-- Right section -->
+    <div class="relative aspect-[335/376] lg:aspect-auto
+                w-full lg:w-[438px] shrink-0
+                flex items-center justify-center p-6">
+
+      <img src="{{ asset('assets/images/ftaplogo-t.png') }}"
+           alt="FTAP Logo"
+           class="max-w-full max-h-full object-contain">
+    </div>
+  </main>
+</div>
 
         @if (Route::has('login'))
             <div class="h-14.5 hidden lg:block"></div>
