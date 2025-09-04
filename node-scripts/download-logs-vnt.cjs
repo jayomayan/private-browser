@@ -1,3 +1,4 @@
+process.env.PLAYWRIGHT_BROWSERS_PATH = "/var/www/toolbox/.playwright-browsers";
 const { chromium } = require('playwright');
 const fs = require('fs');
 const os = require('os');
