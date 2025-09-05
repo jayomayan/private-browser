@@ -7,6 +7,7 @@ use App\Models\DeviceLog;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\LazyCollection;
 
 class DevicesCrud extends Component
 {
@@ -127,42 +128,43 @@ class DevicesCrud extends Component
             session()->flash('message', 'Device deleted.');
         }
 
-        public function exportLogsCsv()
-        {
-            $fileName = 'DeviceLogs.csv';
-            $headers = [
-                "Content-type"        => "text/csv",
-                "Content-Disposition" => "attachment; filename=$fileName",
-                "Pragma"              => "no-cache",
-                "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
-                "Expires"             => "0"
-            ];
+  public function exportLogsCsv()
+{
+    $fileName = 'DeviceLogs.csv';
+    $headers = [
+        "Content-Type"        => "text/csv",
+        "Content-Disposition" => "attachment; filename=$fileName",
+        "Pragma"              => "no-cache",
+        "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+        "Expires"             => "0"
+    ];
 
-            // Define your column headers
-            $columns = ['id', 'ip', 'time', 'message', 'created_at'];
+    $columns = ['id', 'ip', 'time', 'message', 'created_at'];
 
-            $callback = function() use ($columns) {
-                $file = fopen('php://output', 'w');
-                fputcsv($file, $columns); // Write headers
+    $callback = function () use ($columns) {
+        $file = fopen('php://output', 'w');
+        fputcsv($file, $columns);
 
-                DeviceLog::chunk(2000, function ($data) use ($file) {
-                    foreach ($data as $row) {
-                        // Map your model attributes to CSV row values
-                        fputcsv($file, [
-                            $row->id,
-                            $row->ip,
-                            $row->time,
-                            $row->message,
-                            $row->created_at,
-                        ]);
-                    }
-                });
+        // Stream using LazyCollection
+        LazyCollection::make(function () {
+            foreach (DeviceLog::cursor() as $log) {
+                yield $log;
+            }
+        })->each(function ($row) use ($file) {
+            fputcsv($file, [
+                $row->id,
+                $row->ip,
+                $row->time,
+                $row->message,
+                $row->created_at,
+            ]);
+        });
 
-                fclose($file);
-            };
+        fclose($file);
+    };
 
-            return Response::stream($callback, 200, $headers);
-        }
+    return Response::stream($callback, 200, $headers);
+}
 
         public function exportCsv()
         {
