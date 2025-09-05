@@ -131,8 +131,9 @@ class DevicesCrud extends Component
 public function exportLogsCsv()
 {
     $fileName = 'DeviceLogs.csv';
+
     $headers = [
-        "Content-Type"        => "text/csv",
+        "Content-Type"        => "text/csv; charset=UTF-8",
         "Content-Disposition" => "attachment; filename=\"$fileName\"",
         "Cache-Control"       => "no-store, no-cache, must-revalidate",
         "Pragma"              => "no-cache",
@@ -140,19 +141,25 @@ public function exportLogsCsv()
 
     $columns = ['id', 'ip', 'time', 'message', 'created_at'];
 
-    $callback = function () use ($columns) {
-        // disable buffering so rows flush immediately
+    return response()->streamDownload(function () use ($columns) {
+        // Disable buffering to allow streaming
         if (function_exists('apache_setenv')) {
             @apache_setenv('no-gzip', '1');
         }
         ini_set('zlib.output_compression', '0');
+        ini_set('output_buffering', 'off');
         ini_set('implicit_flush', '1');
         ob_implicit_flush(true);
+        while (ob_get_level() > 0) {
+            ob_end_flush();
+        }
 
         $file = fopen('php://output', 'w');
+
+        // Write header row
         fputcsv($file, $columns);
 
-        // use cursor() for true streaming (one row at a time)
+        // Stream rows one by one
         foreach (DeviceLog::cursor() as $row) {
             fputcsv($file, [
                 $row->id,
@@ -162,17 +169,15 @@ public function exportLogsCsv()
                 $row->created_at,
             ]);
 
-            // flush output buffer every 100 rows
-            if ($row->id % 100 === 0) {
+            // Force flush every 500 rows
+            if ($row->id % 500 === 0) {
                 ob_flush();
                 flush();
             }
         }
 
         fclose($file);
-    };
-
-    return Response::stream($callback, 200, $headers);
+    }, $fileName, $headers);
 }
 
         public function exportCsv()
