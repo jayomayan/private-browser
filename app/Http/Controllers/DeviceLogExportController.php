@@ -28,14 +28,6 @@ class DeviceLogExportController extends Controller
 
             $out = fopen('php://output', 'w');
 
-
-                'ip'      => $device->ip,
-                'site_id' => $device->site_id,
-                'date'    => $timestamp->toDateString(),
-                'time'    => $timestamp->toTimeString(),
-                'event'   => $event,
-                'message' => $alarmName,
-
             // CSV header row
             fputcsv($out, ['id', 'ip', 'site_id', 'date', 'time', 'event', 'message', 'created_at']);
 
