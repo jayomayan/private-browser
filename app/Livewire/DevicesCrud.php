@@ -128,15 +128,13 @@ class DevicesCrud extends Component
             session()->flash('message', 'Device deleted.');
         }
 
-  public function exportLogsCsv()
+public function exportLogsCsv()
 {
     $fileName = 'DeviceLogs.csv';
     $headers = [
         "Content-Type"        => "text/csv",
-        "Content-Disposition" => "attachment; filename=$fileName",
-        "Pragma"              => "no-cache",
-        "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
-        "Expires"             => "0"
+        "Content-Disposition" => "attachment; filename=\"$fileName\"",
+        "Cache-Control"       => "no-store, no-cache, must-revalidate",
     ];
 
     $columns = ['id', 'ip', 'time', 'message', 'created_at'];
@@ -145,12 +143,7 @@ class DevicesCrud extends Component
         $file = fopen('php://output', 'w');
         fputcsv($file, $columns);
 
-        // Stream using LazyCollection
-        LazyCollection::make(function () {
-            foreach (DeviceLog::cursor() as $log) {
-                yield $log;
-            }
-        })->each(function ($row) use ($file) {
+        foreach (DeviceLog::cursor() as $row) {
             fputcsv($file, [
                 $row->id,
                 $row->ip,
@@ -158,12 +151,18 @@ class DevicesCrud extends Component
                 $row->message,
                 $row->created_at,
             ]);
-        });
+
+            // Flush output buffer to browser every few rows
+            if (ftell($file) % 2000 === 0) {
+                ob_flush();
+                flush();
+            }
+        }
 
         fclose($file);
     };
 
-    return Response::stream($callback, 200, $headers);
+    return response()->stream($callback, 200, $headers);
 }
 
         public function exportCsv()
