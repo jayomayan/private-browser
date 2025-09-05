@@ -135,14 +135,24 @@ public function exportLogsCsv()
         "Content-Type"        => "text/csv",
         "Content-Disposition" => "attachment; filename=\"$fileName\"",
         "Cache-Control"       => "no-store, no-cache, must-revalidate",
+        "Pragma"              => "no-cache",
     ];
 
     $columns = ['id', 'ip', 'time', 'message', 'created_at'];
 
     $callback = function () use ($columns) {
+        // disable buffering so rows flush immediately
+        if (function_exists('apache_setenv')) {
+            @apache_setenv('no-gzip', '1');
+        }
+        ini_set('zlib.output_compression', '0');
+        ini_set('implicit_flush', '1');
+        ob_implicit_flush(true);
+
         $file = fopen('php://output', 'w');
         fputcsv($file, $columns);
 
+        // use cursor() for true streaming (one row at a time)
         foreach (DeviceLog::cursor() as $row) {
             fputcsv($file, [
                 $row->id,
@@ -152,8 +162,8 @@ public function exportLogsCsv()
                 $row->created_at,
             ]);
 
-            // Flush output buffer to browser every few rows
-            if (ftell($file) % 2000 === 0) {
+            // flush output buffer every 100 rows
+            if ($row->id % 100 === 0) {
                 ob_flush();
                 flush();
             }
@@ -162,7 +172,7 @@ public function exportLogsCsv()
         fclose($file);
     };
 
-    return response()->stream($callback, 200, $headers);
+    return Response::stream($callback, 200, $headers);
 }
 
         public function exportCsv()
