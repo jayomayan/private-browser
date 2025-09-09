@@ -61,10 +61,16 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
     //--
 
     console.log("📂 Clicking Logs menu...");
-    const logsButton = page.locator('#log');
-    await logsButton.waitFor({ state: 'visible', timeout: 10000 });
-    await logsButton.scrollIntoViewIfNeeded();
-    await logsButton.click({ force: true }); // Use force only if needed
+    const logsTab = page.locator('#log');
+
+    console.log("🎯 Trying real mouse click on #log...");
+    const box = await logsTab.boundingBox();
+    if (box) {
+    await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+    console.log("✅ Real mouse click triggered on Logs tab.");
+    } else {
+    throw new Error("❌ Cannot get bounding box for #log");
+    }
     console.log('✅ Clicked #log successfully.');
 
     //---
