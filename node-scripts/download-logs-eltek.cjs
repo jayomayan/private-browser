@@ -62,14 +62,12 @@ console.error("✅ #log menu visible.");
 await page.locator('#log').click();
 console.error("✅ Clicked #log menu.");
 
-console.error("⏳ Waiting for #button_log_save...");
+// Ensure the Logs menu is expanded
+await page.click('#log_menu > a');
 
-await page.locator('#button_log_save').waitFor({ state: 'visible', timeout: 100000 });
-console.error("✅ #button_log_save is visible.");
-
-// If you also want to click it afterwards:
-await page.locator('#button_log_save').click();
-console.error("✅ Clicked #button_log_save.");
+// Now wait for and click Save logs
+await page.locator('#button_log_save').waitFor({ state: 'visible', timeout: 10000 });
+await page.click('#button_log_save');
 
 // Wait until legend appears
 console.error("⏳ Waiting for legend...");
