@@ -61,8 +61,9 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
     //--
     console.log("📂 Clicking Logs menu...");
     await page.locator('#log').click();
+    await page.waitForTimeout(500);
     await page.locator('#log').click();
-    await page.locator('#log').click();
+    await page.waitForTimeout(500);
     await page.locator('#log').click();
     console.log('✅ Clicked #log via real mouse event.');
 
