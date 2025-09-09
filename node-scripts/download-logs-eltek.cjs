@@ -63,19 +63,13 @@ await page.locator('#log').click();
 console.error("✅ Clicked #log menu.");
 
 console.error("⏳ Waiting for #button_log_save...");
-const saveBtn = page.locator('#button_log_save');
 
-await saveBtn.waitFor({ state: 'visible', timeout: 100000 });
+await page.locator('#button_log_save').waitFor({ state: 'visible', timeout: 100000 });
+console.error("✅ #button_log_save is visible.");
 
-// Optional: verify it really has the right text
-const btnText = await saveBtn.textContent();
-if (!/save\s*logs\s*to\s*file/i.test(btnText || "")) {
-  throw new Error(`❌ Unexpected button text: "${btnText}"`);
-}
-
-console.error("✅ Found 'Save logs to file' button.");
-await saveBtn.click();
-console.error("✅ Clicked 'Save logs to file'.");
+// If you also want to click it afterwards:
+await page.locator('#button_log_save').click();
+console.error("✅ Clicked #button_log_save.");
 
 // Wait until legend appears
 console.error("⏳ Waiting for legend...");
