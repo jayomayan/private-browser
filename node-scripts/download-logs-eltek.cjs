@@ -56,12 +56,19 @@ await page.getByRole('textbox', { name: 'Password' }).press('Enter');
 console.error("✅ Submitted login form.");
 
 // Wait until #log is visible
-console.error("⏳ Waiting for #log menu...");
-await page.locator('#log').waitFor({ state: 'visible', timeout: 100000 });
+console.log("⏳ Waiting for and clicking the Logs menu...");
 
-console.error("✅ #log menu visible.");
-await page.locator('#log').click();
-console.error("✅ Clicked #log menu.");
+try {
+  const logsMenu = page.locator('#log_menu'); // not `> a` for now
+  await logsMenu.waitFor({ state: 'attached', timeout: 10000 });
+  await logsMenu.scrollIntoViewIfNeeded();
+  await logsMenu.click(); // click the whole menu item if it works
+  console.log("✅ Clicked Logs menu.");
+} catch (err) {
+  console.error("❌ Failed to click Logs menu.");
+  console.error(err);
+}
+
 
 console.log("⏳ Waiting for 'Save logs to file' element...");
 console.log("⏳ Waiting for 'Save logs to file' link (by id)...");
