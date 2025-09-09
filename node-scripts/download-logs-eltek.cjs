@@ -39,22 +39,33 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
   try {
 
   await page.goto(LOGIN_URL, { timeout: 45_000, waitUntil: "domcontentloaded" });
-  await page.getByRole('button', { name: 'Login' }).click();
-  await page.getByRole('textbox', { name: 'User name' }).fill('admin');
-  await page.getByRole('textbox', { name: 'User name' }).press('Tab');
-  await page.getByRole('textbox', { name: 'Password' }).fill('admin');
-  await page.getByRole('textbox', { name: 'Password' }).press('Enter');
-  await expect(page.locator('#log')).toBeVisible();
-  await page.locator('#log').click();
-  await expect(page.getByRole('link', { name: 'Save logs to file' })).toBeVisible();
-  await page.getByRole('link', { name: 'Save logs to file' }).click();
-  await expect(page.locator('legend')).toBeVisible();
-  await page.locator('#eventlog').check();
-  await page.locator('#numofeventlogitems').click();
-  await page.locator('#numofeventlogitems').click();
-  await page.locator('#numofeventlogitems').fill('1000');
-  await page.getByRole('button', { name: 'Generate log(s)' }).click();
-  await expect(page.getByText('Status: Complete!')).toBeVisible();
+
+await page.getByRole('button', { name: 'Login' }).click();
+await page.getByRole('textbox', { name: 'User name' }).fill('admin');
+await page.getByRole('textbox', { name: 'User name' }).press('Tab');
+await page.getByRole('textbox', { name: 'Password' }).fill('admin');
+await page.getByRole('textbox', { name: 'Password' }).press('Enter');
+
+// Wait until #log is visible
+await page.locator('#log').waitFor({ state: 'visible', timeout: 100000 });
+await page.locator('#log').click();
+
+// Wait until "Save logs to file" link is visible
+await page.getByRole('link', { name: 'Save logs to file' })
+          .waitFor({ state: 'visible', timeout: 100000 });
+await page.getByRole('link', { name: 'Save logs to file' }).click();
+
+// Wait until legend appears
+await page.locator('legend').waitFor({ state: 'visible', timeout: 100000 });
+
+await page.locator('#eventlog').check();
+await page.locator('#numofeventlogitems').click();
+await page.locator('#numofeventlogitems').fill('1000');
+await page.getByRole('button', { name: 'Generate log(s)' }).click();
+
+// Wait until "Status: Complete!" text appears
+await page.getByText('Status: Complete!')
+          .waitFor({ state: 'visible', timeout: 100000 });
 
     // Download log
     console.error("➡️ Downloading log file...");
