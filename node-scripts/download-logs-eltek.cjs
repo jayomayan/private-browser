@@ -53,12 +53,21 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
     console.error("➡️ Signing in...");
     await page.getByRole("button", { name: /sign in/i }).click();
 
+    await page.locator('#log').waitFor({ state: 'visible', timeout: 100000 });
+
+
     // Navigate to logs (original script: #log → 'Save logs to file' flow)
     console.error("➡️ Opening logs panel...");
     await page.locator("#log").click();
 
+    await expect(page.getByRole('link', { name: 'Save logs to file' })).toBeVisible();
+
+
     console.error("➡️ Clicking 'Save logs to file'...");
-    await page.getByRole("link", { name: /save logs to file/i }).click();
+    await page.getByRole('link', { name: 'Save logs to file' }).click();
+
+    await expect(page.locator('#savelog').getByText('Event log')).toBeVisible();
+
 
     // Select which logs to include
     console.error("➡️ Selecting event log and adjusting count...");
