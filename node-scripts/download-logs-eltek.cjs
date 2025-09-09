@@ -64,7 +64,18 @@ await page.locator('#log').click();
 console.error("✅ Clicked #log menu.");
 
 console.log("⏳ Waiting for 'Save logs to file' element...");
-await page.getByText('Save logs to file').click();
+console.log("⏳ Waiting for 'Save logs to file' link (by id)...");
+
+try {
+    const saveLogLink = page.locator('#button_log_save');
+    await saveLogLink.waitFor({ state: 'visible', timeout: 10000 });
+    console.log("✅ Found and visible: Save logs to file");
+    await saveLogLink.click();
+    } catch (err) {
+    console.error("❌ Couldn't find #button_log_save within timeout");
+    await page.screenshot({ path: 'log_save_not_found.png' });
+    console.log("📸 Screenshot saved: log_save_not_found.png");
+    }
 
 console.log("✅ 'Save logs to file' is visible!");
 
