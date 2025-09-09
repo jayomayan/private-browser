@@ -104,6 +104,7 @@ console.log("✅ Hovered and clicked Logs.");
 
     console.log("⚙️ Generating logs...");
     await page.waitForSelector('#requestlog', { state: 'visible', timeout: 10000 });
+     console.log("⚙️ Request Log Button Enabled. Clicking...");
     await page.click('#requestlog');
 
     console.log("⏳ Waiting for generation to complete...");
