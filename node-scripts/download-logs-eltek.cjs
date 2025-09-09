@@ -66,16 +66,25 @@ console.error("✅ Clicked #log menu.");
 console.log("⏳ Waiting for 'Save logs to file' element...");
 console.log("⏳ Waiting for 'Save logs to file' link (by id)...");
 
+console.log("⏳ Expanding Logs menu...");
+await page.locator('#log_menu > a').click();
+
+console.log("⏳ Waiting for Save logs to file link...");
+const saveLogLink = page.locator('#button_log_save');
+
 try {
-    const saveLogLink = page.locator('#button_log_save');
-    await saveLogLink.waitFor({ state: 'visible', timeout: 10000 });
-    console.log("✅ Found and visible: Save logs to file");
-    await saveLogLink.click();
-    } catch (err) {
-    console.error("❌ Couldn't find #button_log_save within timeout");
-    await page.screenshot({ path: 'log_save_not_found.png' });
-    console.log("📸 Screenshot saved: log_save_not_found.png");
-    }
+  await saveLogLink.waitFor({ state: 'visible', timeout: 10000 });
+  console.log("✅ Found and visible: Save logs to file");
+  await saveLogLink.click();
+} catch (err) {
+  console.error("❌ Couldn't find #button_log_save within timeout");
+  try {
+    await page.screenshot({ path: './screenshots/log_save_not_found.png' });
+    console.log("📸 Screenshot saved: ./screenshots/log_save_not_found.png");
+  } catch (e) {
+    console.error("⚠️ Screenshot failed to save:", e.message);
+  }
+}
 
 console.log("✅ 'Save logs to file' is visible!");
 
