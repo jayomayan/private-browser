@@ -38,34 +38,60 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
 
   try {
 
-  await page.goto(LOGIN_URL, { timeout: 45_000, waitUntil: "domcontentloaded" });
+await page.goto(LOGIN_URL, { timeout: 45_000, waitUntil: "domcontentloaded" });
+console.error("✅ Opened login page.");
 
 await page.getByRole('button', { name: 'Login' }).click();
+console.error("✅ Clicked Login button.");
+
 await page.getByRole('textbox', { name: 'User name' }).fill('admin');
+console.error("✅ Filled username.");
+
 await page.getByRole('textbox', { name: 'User name' }).press('Tab');
 await page.getByRole('textbox', { name: 'Password' }).fill('admin');
+console.error("✅ Filled password.");
+
+// Press Enter
 await page.getByRole('textbox', { name: 'Password' }).press('Enter');
+console.error("✅ Submitted login form.");
 
 // Wait until #log is visible
+console.error("⏳ Waiting for #log menu...");
 await page.locator('#log').waitFor({ state: 'visible', timeout: 100000 });
+console.error("✅ #log menu visible.");
 await page.locator('#log').click();
+console.error("✅ Clicked #log menu.");
 
 // Wait until "Save logs to file" link is visible
+console.error("⏳ Waiting for 'Save logs to file' link...");
 await page.getByRole('link', { name: 'Save logs to file' })
           .waitFor({ state: 'visible', timeout: 100000 });
+console.error("✅ 'Save logs to file' link visible.");
 await page.getByRole('link', { name: 'Save logs to file' }).click();
+console.error("✅ Clicked 'Save logs to file'.");
 
 // Wait until legend appears
+console.error("⏳ Waiting for legend...");
 await page.locator('legend').waitFor({ state: 'visible', timeout: 100000 });
+console.error("✅ Legend visible.");
 
+// Select event log and set items
 await page.locator('#eventlog').check();
+console.error("✅ Checked 'eventlog'.");
+
 await page.locator('#numofeventlogitems').click();
 await page.locator('#numofeventlogitems').fill('1000');
-await page.getByRole('button', { name: 'Generate log(s)' }).click();
+console.error("✅ Set number of event log items = 1000.");
 
-// Wait until "Status: Complete!" text appears
+// Generate logs
+await page.getByRole('button', { name: 'Generate log(s)' }).click();
+console.error("✅ Clicked 'Generate log(s)'.");
+
+// Wait for status complete
+console.error("⏳ Waiting for 'Status: Complete!'...");
 await page.getByText('Status: Complete!')
           .waitFor({ state: 'visible', timeout: 100000 });
+console.error("✅ Status: Complete!");
 
     // Download log
     console.error("➡️ Downloading log file...");
