@@ -37,51 +37,30 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
   const page = await context.newPage();
 
   try {
-    console.error(`➡️ Opening ${LOGIN_URL} ...`);
-    await page.goto(LOGIN_URL, { timeout: 45_000, waitUntil: "domcontentloaded" });
 
-    // Click "Login"
-    console.error("➡️ Clicking Login button...");
-    await page.getByRole("button", { name: /login/i }).click();
-
-    // Fill username/password
-    console.error("➡️ Filling credentials...");
-    await page.getByRole("textbox", { name: /user name/i }).fill(USERNAME);
-    await page.getByRole("textbox", { name: /password/i }).fill(PASSWORD);
-
-    // Sign in
-    console.error("➡️ Signing in...");
-    await page.getByRole("button", { name: /sign in/i }).click();
-
-    await page.locator('#log').waitFor({ state: 'visible', timeout: 100000 });
-
-
-    // Navigate to logs (original script: #log → 'Save logs to file' flow)
-    console.error("➡️ Opening logs panel...");
-    await page.goto('http://10.194.82.123/log_save.htm');
-
-    // Select which logs to include
-    console.error("➡️ Selecting event log and adjusting count...");
-    await page.locator('#eventlog').check();
-
-    // Set number of items (double-click then fill)
-    const itemsInput = page.locator("#numofeventlogitems");
-    await itemsInput.fill("1000");
-
-    // Generate logs
-    console.error("➡️ Generating logs...");
-    await page.getByRole("button", { name: /generate log\(s\)/i }).click();
-
-    // Wait for "Status: Complete!"
-    console.error("⏳ Waiting for completion message...");
-    await page.getByText(/Status:\s*Complete!/i).waitFor({ timeout: 60_000 });
-    console.error("✅ Generation complete.");
+  await page.goto(LOGIN_URL, { timeout: 45_000, waitUntil: "domcontentloaded" });
+  await page.getByRole('button', { name: 'Login' }).click();
+  await page.getByRole('textbox', { name: 'User name' }).fill('admin');
+  await page.getByRole('textbox', { name: 'User name' }).press('Tab');
+  await page.getByRole('textbox', { name: 'Password' }).fill('admin');
+  await page.getByRole('textbox', { name: 'Password' }).press('Enter');
+  await expect(page.locator('#log')).toBeVisible();
+  await page.locator('#log').click();
+  await expect(page.getByRole('link', { name: 'Save logs to file' })).toBeVisible();
+  await page.getByRole('link', { name: 'Save logs to file' }).click();
+  await expect(page.locator('legend')).toBeVisible();
+  await page.locator('#eventlog').check();
+  await page.locator('#numofeventlogitems').click();
+  await page.locator('#numofeventlogitems').click();
+  await page.locator('#numofeventlogitems').fill('1000');
+  await page.getByRole('button', { name: 'Generate log(s)' }).click();
+  await expect(page.getByText('Status: Complete!')).toBeVisible();
 
     // Download log
     console.error("➡️ Downloading log file...");
     const [download] = await Promise.all([
       page.waitForEvent("download"),
-      page.getByRole("button", { name: /download log/i }).click(),
+      page.getByRole('button', { name: 'Download log' }).click();
     ]);
 
     const suggested = download.suggestedFilename();
