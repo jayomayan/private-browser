@@ -59,22 +59,9 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
     await page.locator("#log").waitFor({ state: "visible", timeout: 30000 });
 
     //--
-
     console.log("📂 Clicking Logs menu...");
-    const logTab = page.locator('#log');
-    await logTab.waitFor({ state: 'visible', timeout: 10000 });
-
-    console.log('🖱️ Trying real mouse click on Logs tab...');
-    const box = await logTab.boundingBox();
-
-    if (!box) {
-    throw new Error("❌ Cannot get bounding box for #log");
-    }
-
-    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-    await page.mouse.down();
-    await page.mouse.up();
-
+    await page.locator('#log').click();
+    await page.locator('#log').click();
     await page.locator('#log').click();
     await page.locator('#log').click();
     console.log('✅ Clicked #log via real mouse event.');
