@@ -63,8 +63,13 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
     console.log("📂 Clicking Logs menu again (to fully expand if needed)...");
     await page.locator("#log").click();
 
+    const saveLogsLink = page.locator('#button_log_save');
+    await saveLogsLink.waitFor({ state: 'visible', timeout: 10000 });
+    await saveLogsLink.click();
+    console.log('✅ button_log_save is now visible and clicked.');
+
     console.log('⏳ Waiting for .newform-wrapper to load...');
-    await page.locator('.newform-wrapper').waitFor({ state: 'visible', timeout: 10000 });
+    await page.locator(".newform-wrapper").waitFor({ state: 'visible', timeout: 30000 });
     console.log('✅ .newform-wrapper is now visible.');
 
     console.log("🔍 Waiting for 'Save logs to file' link by ID...");
