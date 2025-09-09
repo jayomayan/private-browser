@@ -104,16 +104,18 @@ console.log("✅ Hovered and clicked Logs.");
 
     console.log("⚙️ Generating logs...");
     await page.waitForSelector('#requestlog', { state: 'visible', timeout: 10000 });
-     console.log("⚙️ Request Log Button Enabled. Clicking...");
+    console.log("⚙️ Request Log Button Enabled. Clicking...");
     await page.click('#requestlog');
 
     console.log("⏳ Waiting for generation to complete...");
 
-    await page.locator("#progress").waitFor({ timeout: 15000 });
-    const progressText = await page.locator("#progress").innerText();
-    if (!progressText.includes("Status: Complete!")) {
-      throw new Error("🚫 Log generation did not complete successfully");
-    }
+        await page.waitForFunction(() => {
+        const el = document.querySelector('#progress');
+        if (el) console.log("[Browser] Current text:", el.textContent);
+        return el && el.textContent.includes("Status: Complete!");
+        }, { timeout: 20000 });
+
+    console.log("✅ Confirmed: Log generation complete.");
 
     console.log("📥 Preparing to download log file...");
     const downloadPromise = page.waitForEvent("download");
