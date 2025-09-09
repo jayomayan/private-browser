@@ -93,12 +93,18 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
     console.log("✅ Save logs screen loaded. Configuring options...");
 
     console.log("📌 Checking 'Event log'...");
+
+    await page.locator('#mainPageContainer').click();
+
     const eventLogCheckbox = page.locator("#eventlog");
     await eventLogCheckbox.waitFor({ timeout: 5000 });
     await eventLogCheckbox.check();
 
+    await page.locator('#numofeventlogitems').click();
+    await page.locator('#numofeventlogitems').fill('500');
+
     console.log("⚙️ Generating logs...");
-    await page.getByRole("button", { name: "Generate log(s)" }).click();
+    await page.getByRole('button', { name: 'Generate log(s)' }).click();
 
     console.log("⏳ Waiting for generation to complete...");
 
