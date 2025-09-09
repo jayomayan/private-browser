@@ -60,7 +60,7 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
     console.error("➡️ Downloading log file...");
     const [download] = await Promise.all([
       page.waitForEvent("download"),
-      page.getByRole('button', { name: 'Download log' }).click();
+      page.getByRole('button', { name: 'Download log' }).click()
     ]);
 
     const suggested = download.suggestedFilename();
