@@ -60,14 +60,15 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
     console.error("➡️ Opening logs panel...");
     await page.locator("#log").click();
 
-    await expect(page.getByRole('link', { name: 'Save logs to file' })).toBeVisible();
+   await page.getByRole('link', { name: 'Save logs to file' })
+          .waitFor({ state: 'visible', timeout: 100000 });
 
 
     console.error("➡️ Clicking 'Save logs to file'...");
     await page.getByRole('link', { name: 'Save logs to file' }).click();
 
-    await expect(page.locator('#savelog').getByText('Event log')).toBeVisible();
-
+    await page.locator('#savelog').getByText('Event log')
+          .waitFor({ state: 'visible', timeout: 100000 });
 
     // Select which logs to include
     console.error("➡️ Selecting event log and adjusting count...");
