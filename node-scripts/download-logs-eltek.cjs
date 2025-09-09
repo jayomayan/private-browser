@@ -37,119 +37,59 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
   const page = await context.newPage();
 
   try {
+console.log('🌐 Navigating to login page...');
 
-await page.goto(LOGIN_URL, { timeout: 45_000, waitUntil: "domcontentloaded" });
-console.error("✅ Opened login page.");
+  console.log('🔐 Clicking Login button...');
+  await page.getByRole('button', { name: 'Login' }).click();
 
-await page.getByRole('button', { name: 'Login' }).click();
-console.error("✅ Clicked Login button.");
+  console.log('👤 Filling in username...');
+  await page.getByRole('textbox', { name: 'User name' }).fill('admin');
+  await page.getByRole('textbox', { name: 'User name' }).press('Tab');
 
-await page.getByRole('textbox', { name: 'User name' }).fill('admin');
-console.error("✅ Filled username.");
+  console.log('🔑 Filling in password...');
+  await page.getByRole('textbox', { name: 'Password' }).fill('admin');
+  await page.getByRole('textbox', { name: 'Password' }).press('Enter');
 
-await page.getByRole('textbox', { name: 'User name' }).press('Tab');
-await page.getByRole('textbox', { name: 'Password' }).fill('admin');
-console.error("✅ Filled password.");
+  console.log('📁 Waiting for Logs menu to appear...');
+  await expect(page.locator('#log')).toBeVisible();
 
-// Press Enter
-await page.getByRole('textbox', { name: 'Password' }).press('Enter');
-console.error("✅ Submitted login form.");
+  console.log('📂 Clicking Logs menu...');
+  await page.locator('#log').click();
 
-// Wait until #log is visible
-console.error("⏳ Waiting for #log menu...");
-await page.locator('#log').waitFor({ state: 'visible', timeout: 100000 });
+  console.log('📂 Clicking Logs menu again (to fully expand if needed)...');
+  await page.locator('#log').click(); // double click just like codegen
 
-console.error("✅ #log menu visible.");
-await page.locator('#log').click();
-console.error("✅ Clicked #log menu.");
+  console.log("🔍 Waiting for 'Save logs to file' link by ID...");
+  const saveLogsLink = page.locator('#button_log_save');
+  await expect(saveLogsLink).toBeVisible();
 
-try {
-  const logsMenu = page.locator('#log_menu'); // not `> a` for now
-  await logsMenu.waitFor({ state: 'attached', timeout: 60000 });
-  await logsMenu.scrollIntoViewIfNeeded();
-  await logsMenu.click(); // click the whole menu item if it works
-  console.log("✅ Clicked Logs menu.");
-} catch (err) {
-  console.error("❌ Failed to click Logs menu.");
-  console.error(err);
-}
+  console.log('💾 Clicking Save logs to file...');
+  await saveLogsLink.click();
 
-console.log("⏳ Waiting for 'Save logs to file' element...");
-console.log("⏳ Waiting for 'Save logs to file' link (by id)...");
+  console.log('✅ Save logs screen loaded. Configuring options...');
 
-console.log("⏳ Expanding Logs menu...");
-await page.locator('#log_menu > a').click();
+  console.log('📌 Checking "Event log"...');
+  await page.locator('#eventlog').check();
 
-console.log("⏳ Waiting for Save logs to file link...");
-const saveLogLink = page.locator('#button_log_save');
+  console.log('🔢 Filling in number of log items...');
+  await page.locator('#numofeventlogitems').click();
+  await page.locator('#numofeventlogitems').fill('1000');
 
-try {
-  await saveLogLink.waitFor({ state: 'visible', timeout: 10000 });
-  console.log("✅ Found and visible: Save logs to file");
-  await saveLogLink.click();
-} catch (err) {
-  console.error("❌ Couldn't find #button_log_save within timeout");
-  try {
-    await page.screenshot({ path: './screenshots/log_save_not_found.png' });
-    console.log("📸 Screenshot saved: ./screenshots/log_save_not_found.png");
-  } catch (e) {
-    console.error("⚠️ Screenshot failed to save:", e.message);
-  }
-}
+  console.log('⚙️ Generating logs...');
+  await page.getByRole('button', { name: 'Generate log(s)' }).click();
 
-console.log("✅ 'Save logs to file' is visible!");
+  console.log('⏳ Waiting for generation to complete...');
+  await expect(page.locator('#progress')).toContainText('Status: Complete!');
 
-// Now wait for and click Save logs
-await page.locator('#button_log_save').waitFor({ state: 'visible', timeout: 10000 });
-await page.click('#button_log_save');
+  console.log('📥 Preparing to download log file...');
+  const downloadPromise = page.waitForEvent('download');
 
-// Wait until legend appears
-console.error("⏳ Waiting for legend...");
-await page.locator('legend').waitFor({ state: 'visible', timeout: 100000 });
-console.error("✅ Legend visible.");
+  console.log('⬇️ Clicking Download log button...');
+  await page.getByRole('button', { name: 'Download log' }).click();
 
-// Select event log and set items
-await page.locator('#eventlog').check();
-console.error("✅ Checked 'eventlog'.");
+  const download = await downloadPromise;
+  const filename = 'logs.zip';
+  await download.saveAs(filename);
+  console.log(`✅ Downloaded log file saved as: ${filename}`);
 
-await page.locator('#numofeventlogitems').click();
-await page.locator('#numofeventlogitems').fill('1000');
-console.error("✅ Set number of event log items = 1000.");
-
-// Generate logs
-await page.getByRole('button', { name: 'Generate log(s)' }).click();
-console.error("✅ Clicked 'Generate log(s)'.");
-
-// Wait for status complete
-console.error("⏳ Waiting for 'Status: Complete!'...");
-await page.getByText('Status: Complete!')
-          .waitFor({ state: 'visible', timeout: 100000 });
-console.error("✅ Status: Complete!");
-
-    // Download log
-    console.error("➡️ Downloading log file...");
-    const [download] = await Promise.all([
-      page.waitForEvent("download"),
-      page.getByRole('button', { name: 'Download log' }).click()
-    ]);
-
-    const suggested = download.suggestedFilename();
-    const outPath = path.join(OUTPUT_DIR, suggested);
-
-    // Ensure output dir exists
-    fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-
-    // Save to disk
-    await download.saveAs(outPath);
-    console.error(`✅ Saved: ${outPath}`);
-
-    // Also print path to STDOUT (so Laravel can capture it)
-    console.log(outPath);
-  } catch (err) {
-    console.error("❌ Script Error:", err?.message || err);
-    process.exitCode = 1;
-  } finally {
-    await context.close();
-    fs.rmSync(userDataDir, { recursive: true, force: true });
-  }
 })();
