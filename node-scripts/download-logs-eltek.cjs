@@ -37,7 +37,10 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
   const page = await context.newPage();
 
   try {
+
+await page.goto(LOGIN_URL, { timeout: 45_000, waitUntil: "domcontentloaded" });
 console.log('🌐 Navigating to login page...');
+  await page.goto('http://10.194.82.123/index.html');
 
   console.log('🔐 Clicking Login button...');
   await page.getByRole('button', { name: 'Login' }).click();
@@ -91,5 +94,4 @@ console.log('🌐 Navigating to login page...');
   const filename = 'logs.zip';
   await download.saveAs(filename);
   console.log(`✅ Downloaded log file saved as: ${filename}`);
-
 })();
