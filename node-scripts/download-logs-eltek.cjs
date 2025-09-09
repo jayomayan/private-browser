@@ -58,25 +58,14 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
 
     // Navigate to logs (original script: #log → 'Save logs to file' flow)
     console.error("➡️ Opening logs panel...");
-    await page.locator("#log").click();
-
-   await page.getByRole('link', { name: 'Save logs to file' })
-          .waitFor({ state: 'visible', timeout: 100000 });
-
-
-    console.error("➡️ Clicking 'Save logs to file'...");
-    await page.getByRole('link', { name: 'Save logs to file' }).click();
-
-    await page.locator('#savelog').getByText('Event log')
-          .waitFor({ state: 'visible', timeout: 100000 });
+    await page.goto('http://10.194.82.123/log_save.htm');
 
     // Select which logs to include
     console.error("➡️ Selecting event log and adjusting count...");
-    await page.locator("#eventlog").check();
+    await page.locator('#eventlog').check();
 
     // Set number of items (double-click then fill)
     const itemsInput = page.locator("#numofeventlogitems");
-    await itemsInput.dblclick();
     await itemsInput.fill("1000");
 
     // Generate logs
