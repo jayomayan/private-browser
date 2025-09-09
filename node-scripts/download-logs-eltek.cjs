@@ -60,7 +60,7 @@ console.log("⏳ Waiting for and clicking the Logs menu...");
 
 try {
   const logsMenu = page.locator('#log_menu'); // not `> a` for now
-  await logsMenu.waitFor({ state: 'attached', timeout: 10000 });
+  await logsMenu.waitFor({ state: 'attached', timeout: 60000 });
   await logsMenu.scrollIntoViewIfNeeded();
   await logsMenu.click(); // click the whole menu item if it works
   console.log("✅ Clicked Logs menu.");
