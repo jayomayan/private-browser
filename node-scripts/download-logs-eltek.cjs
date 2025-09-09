@@ -127,9 +127,9 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
     console.log("⬇️ Clicking Download log button...");
    // await page.getByRole("button", { name: "Download log" }).click();
 
-    const disabledAttr = await page.getAttribute('#download', 'disabled');
+    const disabledAttr2 = await page.getAttribute('#download', 'disabled');
 
-    if (disabledAttr !== null) {
+    if (disabledAttr2 !== null) {
     console.log('❌ Download Button is disabled.');
     } else {
         console.log('✅ Download Button is enabled');
