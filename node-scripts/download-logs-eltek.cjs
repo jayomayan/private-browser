@@ -73,7 +73,7 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
     await page.waitForTimeout(200);
     await page.locator('#log').click();
     await page.waitForTimeout(1000);  // Give it time to load
-console.log("✅ Hovered and clicked Logs.");
+    console.log("✅ Hovered and clicked Logs.");
 
     //---
 
@@ -97,13 +97,8 @@ console.log("✅ Hovered and clicked Logs.");
     await eventLogCheckbox.waitFor({ timeout: 5000 });
     await eventLogCheckbox.check();
 
-    console.log("🔢 Filling in number of log items...");
-    const logCountInput = page.locator("#numofeventlogitems");
-    await logCountInput.fill("500");
-
     console.log("⚙️ Generating logs...");
-    await page.locator('#requestlog').waitFor({ state: 'visible' });
-    await page.locator('#requestlog').click();
+    await page.getByRole("button", { name: "Generate log(s)" }).click();
 
     console.log("⏳ Waiting for generation to complete...");
 
