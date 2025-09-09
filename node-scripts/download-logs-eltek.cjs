@@ -60,6 +60,7 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
 
     //--
 console.log("📂 Hovering then clicking Logs menu...");
+await page.waitForTimeout(2000);
 await page.locator('#log').hover();
 await page.waitForTimeout(200);
 await page.locator('#log').click();
