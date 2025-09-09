@@ -61,7 +61,10 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
     //--
 console.log("📂 Hovering then clicking Logs menu...");
 await page.waitForTimeout(2000);
-await page.locator('#log').click({ force: true });
+await page.evaluate(() => {
+  const logBtn = document.querySelector('#log');
+  if (logBtn) logBtn.click();
+});
 console.log("✅ Hovered and clicked Logs.");
 
     //---
