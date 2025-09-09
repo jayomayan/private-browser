@@ -55,7 +55,7 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
     await page.getByRole("textbox", { name: "Password" }).press("Enter");
 
     console.log("📁 Waiting for Logs menu to appear...");
-    await page.locator("#log").waitFor({ state: "visible", timeout: 10000 });
+    await page.locator("#log").waitFor({ state: "visible", timeout: 30000 });
 
     console.log("📂 Clicking Logs menu...");
     await page.locator("#log").click();
