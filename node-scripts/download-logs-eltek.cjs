@@ -107,9 +107,11 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
     await logCountInput.fill("1000");
 
     console.log("⚙️ Generating logs...");
-    await page.getByRole("button", { name: "Generate log(s)" }).click();
+    await page.waitForSelector('#requestlog', { state: 'visible', timeout: 10000 });
+    await page.click('#requestlog');
 
     console.log("⏳ Waiting for generation to complete...");
+
     await page.locator("#progress").waitFor({ timeout: 15000 });
     const progressText = await page.locator("#progress").innerText();
     if (!progressText.includes("Status: Complete!")) {
