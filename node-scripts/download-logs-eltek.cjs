@@ -63,20 +63,10 @@ await page.locator('#log').click();
 console.error("✅ Clicked #log menu.");
 
 console.log("⏳ Waiting for 'Save logs to file' element...");
-
-try {
-  const locator = page.getByRole('link', { name: /save logs to file/i });
-  await expect(locator).toBeVisible({ timeout: 10000 });
-  console.log("✅ 'Save logs to file' is visible!");
-} catch (err) {
-  console.error("❌ Could not find 'Save logs to file' element within timeout.");
-  console.error(err);
-  // Optional: dump the page HTML or take a screenshot for debugging
-  await page.screenshot({ path: 'debug_savelogs.png', fullPage: true });
-  console.log("📸 Screenshot saved: debug_savelogs.png");
-  console.log("🔍 Page content snapshot:\n", await page.content());
-}
-
+await expect(
+  page.locator('a[href*="log_save.htm"]')
+).toBeVisible();
+console.log("✅ 'Save logs to file' is visible!");
 
 // Now wait for and click Save logs
 await page.locator('#button_log_save').waitFor({ state: 'visible', timeout: 10000 });
