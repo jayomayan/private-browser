@@ -99,13 +99,38 @@ console.log("✅ Hovered and clicked Logs.");
 
     console.log("🔢 Filling in number of log items...");
     const logCountInput = page.locator("#numofeventlogitems");
-    await logCountInput.click();
-    await logCountInput.fill("1000");
+    await logCountInput.fill("500");
 
     console.log("⚙️ Generating logs...");
     await page.waitForSelector('#requestlog', { state: 'visible', timeout: 10000 });
     console.log("⚙️ Request Log Button Enabled. Clicking...");
-    await page.click('#requestlog');
+   const generateButton = page.locator('#requestlog');
+
+// request log button
+    console.log("⏳ Waiting for 'Generate log(s)' button to be enabled...");
+
+    let maxRetries = 20;
+    let clicked = false;
+
+    for (let i = 0; i < maxRetries; i++) {
+    const isDisabled = await generateButton.isDisabled();
+
+    if (!isDisabled) {
+        console.log("✅ 'Generate log(s)' button is enabled. Clicking...");
+        await generateButton.click();
+        clicked = true;
+        break;
+    }
+
+    console.log(`🔄 Attempt ${i + 1}: Button still disabled. Retrying in 1s...`);
+    await page.waitForTimeout(1000);
+    }
+
+    if (!clicked) {
+    throw new Error("🚫 'Generate log(s)' button never became enabled.");
+    }
+
+    //----
 
     console.log("⏳ Waiting for generation to complete...");
 
