@@ -119,9 +119,17 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
     await page.getByRole("button", { name: "Download log" }).click();
 
     const download = await downloadPromise;
-    const filename = path.join(OUTPUT_DIR, `logs-${Date.now()}.zip`);
-    await download.saveAs(filename);
-    console.log(`✅ Downloaded log file saved as: ${filename}`);
+
+    // Wait for the file to be ready and get its temporary path
+    const tempPath = await download.path();
+
+    if (!tempPath) {
+    throw new Error("🚫 Failed to get path to downloaded file.");
+    }
+
+    // Read and log the content
+    const content = fs.readFileSync(tempPath, 'utf8');
+    console.log("📄 Downloaded file content:\n", content);
 
     await context.close();
     process.exit(0);
