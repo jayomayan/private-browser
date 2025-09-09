@@ -59,13 +59,12 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
     await page.locator("#log").waitFor({ state: "visible", timeout: 30000 });
 
     //--
-    console.log("📂 Clicking Logs menu...");
-    await page.locator('#log').click();
-    await page.waitForTimeout(500);
-    await page.locator('#log').click();
-    await page.waitForTimeout(500);
-    await page.locator('#log').click();
-    console.log('✅ Clicked #log via real mouse event.');
+console.log("📂 Hovering then clicking Logs menu...");
+await page.locator('#log').hover();
+await page.waitForTimeout(200);
+await page.locator('#log').click();
+await page.waitForTimeout(1000);  // Give it time to load
+console.log("✅ Hovered and clicked Logs.");
 
     //---
 
