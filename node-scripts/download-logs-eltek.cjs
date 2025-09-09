@@ -62,12 +62,19 @@ console.error("✅ #log menu visible.");
 await page.locator('#log').click();
 console.error("✅ Clicked #log menu.");
 
-// Wait until "Save logs to file" link is visible
-console.error("⏳ Waiting for 'Save logs to file' link...");
-await page.getByRole('link', { name: 'Save logs to file' })
-          .waitFor({ state: 'visible', timeout: 100000 });
-console.error("✅ 'Save logs to file' link visible.");
-await page.getByRole('link', { name: 'Save logs to file' }).click();
+console.error("⏳ Waiting for #button_log_save...");
+const saveBtn = page.locator('#button_log_save');
+
+await saveBtn.waitFor({ state: 'visible', timeout: 100000 });
+
+// Optional: verify it really has the right text
+const btnText = await saveBtn.textContent();
+if (!/save\s*logs\s*to\s*file/i.test(btnText || "")) {
+  throw new Error(`❌ Unexpected button text: "${btnText}"`);
+}
+
+console.error("✅ Found 'Save logs to file' button.");
+await saveBtn.click();
 console.error("✅ Clicked 'Save logs to file'.");
 
 // Wait until legend appears
