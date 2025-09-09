@@ -57,11 +57,22 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
     console.log("📁 Waiting for Logs menu to appear...");
     await page.locator("#log").waitFor({ state: "visible", timeout: 30000 });
 
-    console.log("📂 Clicking Logs menu...");
-    await page.locator("#log").click();
+    //--
 
-    console.log("📂 Clicking Logs menu again (to fully expand if needed)...");
-    await page.locator("#log").click();
+    console.log("📂 Clicking Logs menu...");
+    const logsButton = page.locator('#log');
+
+    console.log('⏳ Waiting for #log to become visible...');
+    await logsButton.waitFor({ state: 'visible', timeout: 10000 });
+
+    console.log('📂 Scrolling into view and clicking #log...');
+    await logsButton.scrollIntoViewIfNeeded();
+    await logsButton.click();
+
+    console.log('✅ Clicked #log successfully.');
+
+    //---
+
 
     const saveLogsLink = page.locator('#button_log_save');
     await saveLogsLink.waitFor({ state: 'visible', timeout: 10000 });
