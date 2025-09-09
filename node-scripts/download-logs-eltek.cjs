@@ -25,7 +25,7 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
   const userDataDir = fs.mkdtempSync(path.join(os.tmpdir(), "chrome-profile-"));
   const context = await chromium.launchPersistentContext(userDataDir, {
     acceptDownloads: true,
-    headless: false,
+    headless: true,
     slowMo: 100,
     viewport: { width: 1920, height: 1080 },
     userAgent: "Mozilla/5.0",
