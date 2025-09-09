@@ -58,17 +58,21 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
     console.log("📁 Waiting for Logs menu to appear...");
     await page.locator("#log").waitFor({ state: "visible", timeout: 30000 });
 
+    console.log('✅ Waiting for the chart to load.');
 
     await page.waitForSelector('#Webpower_logg_chart.data-ready', {
-  state: 'attached',   // or "visible" if you want to wait for it to show
-  timeout: 15000       // adjust timeout based on load time
-});
-console.log('✅ #Webpower_logg_chart is attached and data-ready.');
+    state: 'attached',   // or "visible" if you want to wait for it to show
+    timeout: 15000       // adjust timeout based on load time
+    });
 
+    console.log('✅ #Webpower_logg_chart is attached and data-ready.');
     //--
-console.log("📂 Hovering then clicking Logs menu...");
-const frame = page.frame({ name: 'mainframe' }); // adjust if needed
-await frame.locator('#log').click();
+    console.log("📂 Hovering then clicking Logs menu...");
+    await page.waitForTimeout(2000);
+    await page.locator('#log').hover();
+    await page.waitForTimeout(200);
+    await page.locator('#log').click();
+    await page.waitForTimeout(1000);  // Give it time to load
 console.log("✅ Hovered and clicked Logs.");
 
     //---
