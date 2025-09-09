@@ -61,14 +61,9 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
 
     console.log("📂 Clicking Logs menu...");
     const logsButton = page.locator('#log');
-
-    console.log('⏳ Waiting for #log to become visible...');
     await logsButton.waitFor({ state: 'visible', timeout: 10000 });
-
-    console.log('📂 Scrolling into view and clicking #log...');
     await logsButton.scrollIntoViewIfNeeded();
-    await logsButton.click();
-
+    await logsButton.click({ force: true }); // Use force only if needed
     console.log('✅ Clicked #log successfully.');
 
     //---
