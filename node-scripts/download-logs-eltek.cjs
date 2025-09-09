@@ -1,7 +1,7 @@
 // scripts/export-logs.js
 process.env.PLAYWRIGHT_BROWSERS_PATH = "/var/www/toolbox/.playwright-browsers";
 
-const { chromium } = require("playwright");
+const { chromium, expect } = require("playwright");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
@@ -37,61 +37,67 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
   const page = await context.newPage();
 
   try {
+    console.log('🌐 Navigating to login page...');
+    await page.goto(LOGIN_URL, { timeout: 45_000, waitUntil: "domcontentloaded" });
 
-await page.goto(LOGIN_URL, { timeout: 45_000, waitUntil: "domcontentloaded" });
-console.log('🌐 Navigating to login page...');
-  await page.goto('http://10.194.82.123/index.html');
+    console.log('🔐 Clicking Login button...');
+    await page.getByRole('button', { name: 'Login' }).click();
 
-  console.log('🔐 Clicking Login button...');
-  await page.getByRole('button', { name: 'Login' }).click();
+    console.log('👤 Filling in username...');
+    await page.getByRole('textbox', { name: 'User name' }).fill(USERNAME);
+    await page.getByRole('textbox', { name: 'User name' }).press('Tab');
 
-  console.log('👤 Filling in username...');
-  await page.getByRole('textbox', { name: 'User name' }).fill('admin');
-  await page.getByRole('textbox', { name: 'User name' }).press('Tab');
+    console.log('🔑 Filling in password...');
+    await page.getByRole('textbox', { name: 'Password' }).fill(PASSWORD);
+    await page.getByRole('textbox', { name: 'Password' }).press('Enter');
 
-  console.log('🔑 Filling in password...');
-  await page.getByRole('textbox', { name: 'Password' }).fill('admin');
-  await page.getByRole('textbox', { name: 'Password' }).press('Enter');
+    console.log('📁 Waiting for Logs menu to appear...');
+    await expect(page.locator('#log')).toBeVisible();
 
-  console.log('📁 Waiting for Logs menu to appear...');
-  await expect(page.locator('#log')).toBeVisible();
+    console.log('📂 Clicking Logs menu...');
+    await page.locator('#log').click();
 
-  console.log('📂 Clicking Logs menu...');
-  await page.locator('#log').click();
+    console.log('📂 Clicking Logs menu again (to fully expand if needed)...');
+    await page.locator('#log').click();
 
-  console.log('📂 Clicking Logs menu again (to fully expand if needed)...');
-  await page.locator('#log').click(); // double click just like codegen
+    console.log("🔍 Waiting for 'Save logs to file' link by ID...");
+    const saveLogsLink = page.locator('#button_log_save');
+    await expect(saveLogsLink).toBeVisible();
 
-  console.log("🔍 Waiting for 'Save logs to file' link by ID...");
-  const saveLogsLink = page.locator('#button_log_save');
-  await expect(saveLogsLink).toBeVisible();
+    console.log('💾 Clicking Save logs to file...');
+    await saveLogsLink.click();
 
-  console.log('💾 Clicking Save logs to file...');
-  await saveLogsLink.click();
+    console.log('✅ Save logs screen loaded. Configuring options...');
 
-  console.log('✅ Save logs screen loaded. Configuring options...');
+    console.log('📌 Checking "Event log"...');
+    await page.locator('#eventlog').check();
 
-  console.log('📌 Checking "Event log"...');
-  await page.locator('#eventlog').check();
+    console.log('🔢 Filling in number of log items...');
+    await page.locator('#numofeventlogitems').click();
+    await page.locator('#numofeventlogitems').fill('1000');
 
-  console.log('🔢 Filling in number of log items...');
-  await page.locator('#numofeventlogitems').click();
-  await page.locator('#numofeventlogitems').fill('1000');
+    console.log('⚙️ Generating logs...');
+    await page.getByRole('button', { name: 'Generate log(s)' }).click();
 
-  console.log('⚙️ Generating logs...');
-  await page.getByRole('button', { name: 'Generate log(s)' }).click();
+    console.log('⏳ Waiting for generation to complete...');
+    await expect(page.locator('#progress')).toContainText('Status: Complete!');
 
-  console.log('⏳ Waiting for generation to complete...');
-  await expect(page.locator('#progress')).toContainText('Status: Complete!');
+    console.log('📥 Preparing to download log file...');
+    const downloadPromise = page.waitForEvent('download');
 
-  console.log('📥 Preparing to download log file...');
-  const downloadPromise = page.waitForEvent('download');
+    console.log('⬇️ Clicking Download log button...');
+    await page.getByRole('button', { name: 'Download log' }).click();
 
-  console.log('⬇️ Clicking Download log button...');
-  await page.getByRole('button', { name: 'Download log' }).click();
+    const download = await downloadPromise;
+    const filename = path.join(OUTPUT_DIR, `logs-${Date.now()}.zip`);
+    await download.saveAs(filename);
+    console.log(`✅ Downloaded log file saved as: ${filename}`);
 
-  const download = await downloadPromise;
-  const filename = 'logs.zip';
-  await download.saveAs(filename);
-  console.log(`✅ Downloaded log file saved as: ${filename}`);
+    await context.close();
+  } catch (err) {
+    console.error("❌ Script failed:", err);
+    await page.screenshot({ path: path.join(OUTPUT_DIR, 'error.png') });
+    console.log("📸 Screenshot of error state saved.");
+    process.exit(1);
+  }
 })();
