@@ -58,19 +58,13 @@ console.error("✅ Submitted login form.");
 // Wait until #log is visible
 console.error("⏳ Waiting for #log menu...");
 await page.locator('#log').waitFor({ state: 'visible', timeout: 100000 });
+
 console.error("✅ #log menu visible.");
 await page.locator('#log').click();
 console.error("✅ Clicked #log menu.");
 
 console.log("⏳ Waiting for 'Save logs to file' element...");
-
-try {
-  await page.locator('a[href*="log_save.htm"]').waitFor({ state: 'visible', timeout: 10000 });
-  console.log("✅ Save logs link is visible!");
-} catch (err) {
-  console.error("❌ Could not find Save logs link.");
-  console.error(err);
-}
+await page.getByText('Save logs to file').click();
 
 console.log("✅ 'Save logs to file' is visible!");
 
