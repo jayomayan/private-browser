@@ -75,6 +75,8 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
     await page.mouse.down();
     await page.mouse.up();
 
+    await page.locator('#log').click();
+    await page.locator('#log').click();
     console.log('✅ Clicked #log via real mouse event.');
 
     //---
