@@ -102,16 +102,16 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
 
     await page.locator('#numofeventlogitems').click();
     await page.locator('#numofeventlogitems').fill('500');
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(10000);
 
     console.log("⚙️ Generating logs...");
 
     const disabledAttr = await page.getAttribute('#requestlog', 'disabled');
 
     if (disabledAttr !== null) {
-    console.log('❌ Button is disabled.');
+    console.log('❌ Generate Log Button is disabled.');
     } else {
-        console.log('✅ Button is enabled');
+        console.log('✅ Generate Log Button is enabled');
          await page.getByRole('button', { name: 'Generate log(s)' }).click();
     }
 
@@ -125,11 +125,20 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
     const downloadPromise = page.waitForEvent("download");
 
     console.log("⬇️ Clicking Download log button...");
-    await page.getByRole("button", { name: "Download log" }).click();
+   // await page.getByRole("button", { name: "Download log" }).click();
+
+    const disabledAttr = await page.getAttribute('#download', 'disabled');
+
+    if (disabledAttr !== null) {
+    console.log('❌ Download Button is disabled.');
+    } else {
+        console.log('✅ Download Button is enabled');
+        // await page.getByRole('button', { name: 'Download log' }).click();
+    }
 
     const [download] = await Promise.all([
-    page.waitForEvent('download'),
-    page.getByRole('button', { name: 'Download log' }).click()
+        page.waitForEvent('download'),
+        page.getByRole('button', { name: 'Download log' }).click()
     ]);
 
     const tempPath = await download.path();
