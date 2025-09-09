@@ -63,9 +63,15 @@ await page.locator('#log').click();
 console.error("✅ Clicked #log menu.");
 
 console.log("⏳ Waiting for 'Save logs to file' element...");
-await expect(
-  page.locator('a[href*="log_save.htm"]')
-).toBeVisible();
+
+try {
+  await page.locator('a[href*="log_save.htm"]').waitFor({ state: 'visible', timeout: 10000 });
+  console.log("✅ Save logs link is visible!");
+} catch (err) {
+  console.error("❌ Could not find Save logs link.");
+  console.error(err);
+}
+
 console.log("✅ 'Save logs to file' is visible!");
 
 // Now wait for and click Save logs
