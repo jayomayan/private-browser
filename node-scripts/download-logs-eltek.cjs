@@ -65,7 +65,7 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
 
     console.log("🔍 Waiting for 'Save logs to file' link by ID...");
     const saveLogsLink = page.locator("#button_log_save");
-    await saveLogsLink.waitFor({ state: "visible", timeout: 10000 });
+    await saveLogsLink.waitFor({ state: "visible", timeout: 30000 });
 
     console.log("💾 Clicking Save logs to file...");
     await saveLogsLink.click();
