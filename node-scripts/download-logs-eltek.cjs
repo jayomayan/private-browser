@@ -104,13 +104,14 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
     await page.locator('#numofeventlogitems').fill('500');
 
     console.log("⚙️ Generating logs...");
+
     const disabledAttr = await page.getAttribute('#requestlog', 'disabled');
     if (disabledAttr !== null) {
-    console.log('❌ Button is disabled');
+    console.log('❌ Button is disabled. Coz Log is generated previously.');
     } else {
         console.log('✅ Button is enabled');
+         await page.getByRole('button', { name: 'Generate log(s)' }).click();
     }
-    await page.getByRole('button', { name: 'Generate log(s)' }).click();
 
     console.log("⏳ Waiting for generation to complete...");
 
