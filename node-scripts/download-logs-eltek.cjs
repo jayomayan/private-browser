@@ -111,7 +111,7 @@ const ALT_LOGIN_URL = `http://${IP}/index.html`;
     await ensureLogsMenuOpen();
 
     // Wait for and click the specific submenu item by ID
-    await waitVisible("#button_log_save", T_MED, "#button_log_save");
+    //await waitVisible("#button_log_save", T_MED, "#button_log_save");
 
     // Some firmware triggers a small navigation or content swap; cover both:
     console.error("🖱️ Clicking #button_log_save…");
