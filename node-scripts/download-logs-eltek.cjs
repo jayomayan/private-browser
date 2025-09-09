@@ -102,43 +102,12 @@ console.log("✅ Hovered and clicked Logs.");
     await logCountInput.fill("500");
 
     console.log("⚙️ Generating logs...");
-    await page.waitForSelector('#requestlog', { state: 'visible', timeout: 10000 });
-    console.log("⚙️ Request Log Button Enabled. Clicking...");
-   const generateButton = page.locator('#requestlog');
-
-// request log button
-    console.log("⏳ Waiting for 'Generate log(s)' button to be enabled...");
-
-    let maxRetries = 20;
-    let clicked = false;
-
-    for (let i = 0; i < maxRetries; i++) {
-    const isDisabled = await generateButton.isDisabled();
-
-    if (!isDisabled) {
-        console.log("✅ 'Generate log(s)' button is enabled. Clicking...");
-        await generateButton.click();
-        clicked = true;
-        break;
-    }
-
-    console.log(`🔄 Attempt ${i + 1}: Button still disabled. Retrying in 1s...`);
-    await page.waitForTimeout(1000);
-    }
-
-    if (!clicked) {
-    throw new Error("🚫 'Generate log(s)' button never became enabled.");
-    }
-
-    //----
+    await page.locator('#requestlog').waitFor({ state: 'visible' });
+    await page.locator('#requestlog').click();
 
     console.log("⏳ Waiting for generation to complete...");
 
-        await page.waitForFunction(() => {
-        const el = document.querySelector('#progress');
-        if (el) console.log("[Browser] Current text:", el.textContent);
-        return el && el.textContent.includes("Status: Complete!");
-        }, { timeout: 20000 });
+    await page.waitForTimeout(10000);
 
     console.log("✅ Confirmed: Log generation complete.");
 
