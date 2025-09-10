@@ -62,7 +62,7 @@ const LOGIN_URL = `http://${IP}/INDEX.HTM`;
 
     await page.waitForSelector('#Webpower_logg_chart.data-ready', {
     state: 'attached',   // or "visible" if you want to wait for it to show
-    timeout: 15000       // adjust timeout based on load time
+    timeout: 30000       // adjust timeout based on load time
     });
 
     console.log('✅ #Webpower_logg_chart is attached and data-ready.');
