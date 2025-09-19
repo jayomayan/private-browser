@@ -93,9 +93,8 @@ function processLogs($ip)
                 \Log::error("Error processing logs from {$ip}: " . $e->getMessage());
             }
 
-    } elseif ($device->name=="Vnt") {
-       // Specific processing for Vnt devices
-          // Specific processing for Enetek devices
+    } elseif ($device->name=="Eltek") {
+       // Specific processing for Eltek devices
       try {
             $logString = download_logs2($ip);
             $lines = explode("\n", trim($logString));
@@ -158,9 +157,9 @@ function processLogs($ip)
 
 // for VNT devices
 if (!function_exists('download_logs2')) {
-function download_logs2($ip, $username = 'admin', $password = 'admin@123')
+function download_logs2($ip, $username = 'admin', $password = 'admin')
 {
-    $scriptPath = base_path('node-scripts/download-logs-vnt.cjs');
+    $scriptPath = base_path('node-scripts/download-logs-eltek.cjs');
     $command = escapeshellcmd("node $scriptPath $ip $username $password");
 
     $output = null;

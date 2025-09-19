@@ -55,7 +55,7 @@ const LOGIN_URL = `http://${IP}/`;
         await form.locator('input[name="ntpserverip4"]').fill('63');
 
         // timezone
-        await form.locator('input[name="ntptimezone"]').fill('8');
+        await form.locator('input[name="ntptimezone"]').fill('0');
 
         console.error("✅ NTP fields set. Submitting...");
 

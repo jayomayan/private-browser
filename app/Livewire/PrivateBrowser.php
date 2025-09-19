@@ -120,7 +120,7 @@ class PrivateBrowser extends Component
             putenv('HOME=/tmp');
 
             Browsershot::url("http://{$this->privateIp}")
-            ->setChromePath('/usr/bin/google-chrome') // or your verified path
+            ->setChromePath('/usr/bin/google-chrome-stable') // or your verified path
             ->setOption('args', [
                 '--no-sandbox',
                 '--disable-dev-shm-usage',
@@ -134,7 +134,7 @@ class PrivateBrowser extends Component
             ->save(storage_path("app/public/snapshots/{$this->privateIp}.png"));
 
             Browsershot::url("https://{$this->privateIp}")
-            ->setChromePath('/usr/bin/google-chrome')
+            ->setChromePath('/usr/bin/google-chrome-stable')
             ->setOption('ignoreHTTPSErrors', true)
             ->setOption('args', [
                 '--no-sandbox',
