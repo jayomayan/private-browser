@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('devices', function (Blueprint $table) {
-            $table->string('arm_version')->nullable()->after('some_existing_column');
+            $table->string('arm_version')->nullable()->after('name');
             $table->string('stm32_version')->nullable()->after('arm_version');
             $table->string('web_version')->nullable()->after('stm32_version');
             $table->string('kernel_version')->nullable()->after('web_version');
