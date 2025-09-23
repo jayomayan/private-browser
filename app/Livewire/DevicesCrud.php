@@ -76,30 +76,66 @@ class DevicesCrud extends Component
         $this->showForm = true;
     }
 
-    public function save()
-    {
-        $data = $this->validate();
+public function save()
+{
+    $data = $this->validate();
 
-        // enforce unique IP (your schema has UNIQUE on ip)
-        $exists = Device::where('ip', $this->ip)
-            ->when($this->deviceId, fn($q)=>$q->where('id','!=',$this->deviceId))
-            ->exists();
-        if ($exists) {
-            $this->addError('ip', 'This IP already exists.');
-            return;
-        }
+    // enforce unique IP (your schema has UNIQUE on ip)
+    $exists = Device::where('ip', $this->ip)
+        ->when($this->deviceId, fn($q) => $q->where('id', '!=', $this->deviceId))
+        ->exists();
 
-        if ($this->deviceId) {
-            Device::findOrFail($this->deviceId)->update($data);
-            session()->flash('message', 'Device updated.');
-        } else {
-            Device::create($data);
-            session()->flash('message', 'Device created.');
-        }
-
-        $this->showForm = false;
-        $this->reset(['deviceId','ip','site_id','name']);
+    if ($exists) {
+        $this->addError('ip', 'This IP already exists.');
+        return;
     }
+
+    if ($this->deviceId) {
+        $device = Device::findOrFail($this->deviceId);
+        $device->update($data);
+        session()->flash('message', 'Device updated.');
+    } else {
+        $device = Device::create($data);
+        session()->flash('message', 'Device created.');
+    }
+
+    // ✅ Extra step: if Enetek, fetch versions with Node script
+    if (strtolower($device->name) === 'enetek') {
+        try {
+            $scriptPath = base_path('node-scripts/getversions.cjs');
+            $command = escapeshellcmd("node $scriptPath {$device->ip} admin admin");
+
+            $output = null;
+            $returnVar = null;
+
+            exec($command . ' 2>&1', $output, $returnVar);
+
+            if ($returnVar !== 0) {
+                \Log::error("❌ Version fetch failed for device {$device->ip}:\n" . implode("\n", $output));
+            } else {
+                $json = implode("\n", $output);
+                $versions = json_decode($json, true);
+
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    \Log::error("❌ Invalid JSON from version fetch for {$device->ip}:\n$json");
+                } elseif (is_array($versions)) {
+                    $device->update([
+                        'arm_version'    => $versions['arm_version'] ?? null,
+                        'stm32_version'  => $versions['stm32_version'] ?? null,
+                        'web_version'    => $versions['web_version'] ?? null,
+                        'kernel_version' => $versions['kernel_version'] ?? null,
+                        'mib_version'    => $versions['mib_version'] ?? null,
+                    ]);
+                }
+            }
+        } catch (\Throwable $e) {
+            \Log::error("❌ Exception while fetching Enetek versions for {$device->ip}: " . $e->getMessage());
+        }
+    }
+
+    $this->showForm = false;
+    $this->reset(['deviceId', 'ip', 'site_id', 'name']);
+}
 
         public function confirmDelete(int $id): void
         {
