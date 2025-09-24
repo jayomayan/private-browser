@@ -32,19 +32,19 @@ const LOGIN_URL = `http://${IP}/`;
     const page = await context.newPage();
 
     try {
-        console.error("✅ Opening login page...");
+        //console.error("✅ Opening login page...");
         await page.goto(LOGIN_URL, { timeout: 30000 });
         await page.waitForTimeout(2000);
 
         const frame = await page.frame({ name: "I1" });
         if (!frame) throw new Error("❌ Could not find iframe 'I1'.");
 
-        console.error("✅ Logging in...");
+        //console.error("✅ Logging in...");
         await frame.fill('input[name="T1"]', USERNAME);
         await frame.fill('input[name="T2"]', PASSWORD);
         await frame.click('button:has-text("Login")');
         await page.waitForTimeout(2000);
-        console.error("✅ Logged in successfully.");
+        //console.error("✅ Logged in successfully.");
 
         // Click About
         await frame.getByRole('link', { name: 'About' }).click();
@@ -54,7 +54,7 @@ const LOGIN_URL = `http://${IP}/`;
         const nested = frame.childFrames().find(f => f.name() === 'iframe');
         if (!nested) throw new Error("❌ Could not find nested iframe inside 'I1'.");
 
-        console.error("✅ Extracting version values...");
+        //console.error("✅ Extracting version values...");
 
         // Extract values (use .inputValue(), fallback to .getAttribute("value") if read-only)
         const versions = {
