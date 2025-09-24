@@ -102,7 +102,7 @@ public function save()
     // ✅ Extra step: if Enetek, fetch versions with Node script
     if (strtolower($device->name) === 'enetek') {
         try {
-            $scriptPath = base_path('node-scripts/getversions.cjs');
+            $scriptPath = base_path('node-scripts/download-version-enetek.cjs');
             $command = escapeshellcmd("node $scriptPath {$device->ip} admin admin");
 
             $output = null;
