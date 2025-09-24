@@ -197,6 +197,8 @@ public function save()
                             $row->ip,
                             $row->site_id,
                             $row->name,
+                            $row->arm_version,
+                            $row->mib_version,
                             $row->created_at,
                             $row->last_log_pulled_at,
                         ]);
