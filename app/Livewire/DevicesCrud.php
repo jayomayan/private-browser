@@ -183,7 +183,7 @@ public function save()
             ];
 
             // Define your column headers
-            $columns = ['id', 'ip', 'site_id', 'name', 'created_at'];
+            $columns = ['id', 'ip', 'site_id', 'name','fw_version','mib_version', 'created_at'];
 
             $callback = function() use ($columns) {
                 $file = fopen('php://output', 'w');
