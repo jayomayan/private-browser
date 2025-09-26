@@ -165,11 +165,46 @@ public function save()
             session()->flash('message', 'Device deleted.');
         }
 
-        public function exportLogsCsv()
-        {
-            // Redirect the browser to a normal route that returns the file
-            return redirect()->route('export.logs');
-        }
+
+public function exportLogsCsv()
+{
+    $fileName = 'DeviceLogs.csv';
+    $headers = [
+        "Content-type"        => "text/csv",
+        "Content-Disposition" => "attachment; filename=$fileName",
+        "Pragma"              => "no-cache",
+        "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+        "Expires"             => "0"
+    ];
+
+    // Define your column headers
+    $columns = ['id', 'ip', 'site_id', 'date', 'time', 'event', 'message', 'created_at', 'updated_at'];
+
+    $callback = function() use ($columns) {
+        $file = fopen('php://output', 'w');
+        fputcsv($file, $columns); // Write headers
+
+        DeviceLog::chunk(2000, function ($logs) use ($file) {
+            foreach ($logs as $log) {
+                fputcsv($file, [
+                    $log->id,
+                    $log->ip,
+                    $log->site_id,
+                    $log->date,
+                    $log->time,
+                    $log->event,
+                    $log->message,
+                    $log->created_at,
+                    $log->updated_at,
+                ]);
+            }
+        });
+
+        fclose($file);
+    };
+
+    return Response::stream($callback, 200, $headers);
+}
 
         public function exportCsv()
         {
@@ -183,7 +218,7 @@ public function save()
             ];
 
             // Define your column headers
-            $columns = ['id', 'ip', 'site_id', 'name','fw_version','mib_version', 'created_at'];
+            $columns = ['id', 'ip', 'site_id', 'name','fw_version','mib_version', 'created_at','last_log_pulled_at'];
 
             $callback = function() use ($columns) {
                 $file = fopen('php://output', 'w');

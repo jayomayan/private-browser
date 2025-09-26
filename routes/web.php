@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OktaOIDCController;
-use App\Http\Controllers\DeviceLogExportController;
+
 
 Route::get('/login/okta', [OktaOIDCController::class, 'login']);
 
@@ -36,8 +36,6 @@ Route::middleware([
         return view('device-crud');
     })->name('device-crud');
 
-    Route::get('/export-logs', [DeviceLogExportController::class, 'export'])
-         ->name('export.logs');
 
 });
 
