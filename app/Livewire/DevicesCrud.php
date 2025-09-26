@@ -169,47 +169,58 @@ public function save()
 public function exportLogsCsv()
 {
     $fileName = 'DeviceLogs.csv';
-    $headers = [
-        "Content-type"        => "text/csv",
-        "Content-Disposition" => "attachment; filename=$fileName",
+    $tempPath = storage_path('app/temp_' . uniqid() . '.csv');
+
+    // 1. Open a temp file for writing
+    $handle = fopen($tempPath, 'w');
+
+    // 2. Write the column headers
+    fputcsv($handle, [
+        'id',
+        'ip',
+        'site_id',
+        'date',
+        'time',
+        'event',
+        'message',
+        'created_at',
+        'updated_at'
+    ]);
+
+    // 3. Write logs in chunks
+    \App\Models\DeviceLog::chunk(2000, function ($logs) use ($handle) {
+        foreach ($logs as $log) {
+            fputcsv($handle, [
+                $log->id,
+                $log->ip,
+                $log->site_id,
+                $log->date,
+                $log->time,
+                $log->event,
+                $log->message,
+                $log->created_at,
+                $log->updated_at,
+            ]);
+        }
+        fflush($handle); // flush contents to disk
+    });
+
+    fclose($handle);
+
+    // 4. Stream the file back as response
+    return new \Symfony\Component\HttpFoundation\StreamedResponse(function () use ($tempPath) {
+        $stream = fopen($tempPath, 'r');
+        fpassthru($stream);
+        fclose($stream);
+
+        // delete temp file after streaming
+        unlink($tempPath);
+    }, 200, [
+        "Content-Type"        => "text/csv",
+        "Content-Disposition" => "attachment; filename=\"$fileName\"",
+        "Cache-Control"       => "no-store, no-cache, must-revalidate",
         "Pragma"              => "no-cache",
-        "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
-        "Expires"             => "0"
-    ];
-
-    $columns = ['id', 'ip', 'site_id', 'date', 'time', 'event', 'message', 'created_at', 'updated_at'];
-
-    $callback = function() use ($columns) {
-        $file = fopen('php://output', 'w');
-        fputcsv($file, $columns);
-
-        DeviceLog::chunk(2000, function ($logs) use ($file) {
-            foreach ($logs as $log) {
-                fputcsv($file, [
-                    $log->id,
-                    $log->ip,
-                    $log->site_id,
-                    $log->date,
-                    $log->time,
-                    $log->event,
-                    $log->message,
-                    $log->created_at,
-                    $log->updated_at,
-                ]);
-            }
-
-            // 🔑 force flushing after each chunk
-            fflush($file);
-            if (ob_get_level() > 0) {
-                ob_flush();
-            }
-            flush();
-        });
-
-        fclose($file);
-    };
-
-    return Response::stream($callback, 200, $headers);
+    ]);
 }
 
         public function exportCsv()
