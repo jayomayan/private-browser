@@ -174,7 +174,7 @@ public function exportLogsCsv()
     // 1. Open a temp file for writing
     $handle = fopen($tempPath, 'w');
 
-    // 2. Write the column headers
+    // 2. Write headers
     fputcsv($handle, [
         'id',
         'ip',
@@ -187,7 +187,7 @@ public function exportLogsCsv()
         'updated_at'
     ]);
 
-    // 3. Write logs in chunks
+    // 3. Write rows in chunks
     \App\Models\DeviceLog::chunk(2000, function ($logs) use ($handle) {
         foreach ($logs as $log) {
             fputcsv($handle, [
@@ -202,25 +202,14 @@ public function exportLogsCsv()
                 $log->updated_at,
             ]);
         }
-        fflush($handle); // flush contents to disk
     });
 
     fclose($handle);
 
-    // 4. Stream the file back as response
-    return new \Symfony\Component\HttpFoundation\StreamedResponse(function () use ($tempPath) {
-        $stream = fopen($tempPath, 'r');
-        fpassthru($stream);
-        fclose($stream);
-
-        // delete temp file after streaming
-        unlink($tempPath);
-    }, 200, [
-        "Content-Type"        => "text/csv",
-        "Content-Disposition" => "attachment; filename=\"$fileName\"",
-        "Cache-Control"       => "no-store, no-cache, must-revalidate",
-        "Pragma"              => "no-cache",
-    ]);
+    // 4. Let Laravel handle the download
+    return response()->download($tempPath, $fileName, [
+        "Content-Type" => "text/csv",
+    ])->deleteFileAfterSend(true);
 }
 
         public function exportCsv()
