@@ -177,12 +177,11 @@ public function exportLogsCsv()
         "Expires"             => "0"
     ];
 
-    // Define your column headers
     $columns = ['id', 'ip', 'site_id', 'date', 'time', 'event', 'message', 'created_at', 'updated_at'];
 
     $callback = function() use ($columns) {
         $file = fopen('php://output', 'w');
-        fputcsv($file, $columns); // Write headers
+        fputcsv($file, $columns);
 
         DeviceLog::chunk(2000, function ($logs) use ($file) {
             foreach ($logs as $log) {
@@ -198,6 +197,13 @@ public function exportLogsCsv()
                     $log->updated_at,
                 ]);
             }
+
+            // 🔑 force flushing after each chunk
+            fflush($file);
+            if (ob_get_level() > 0) {
+                ob_flush();
+            }
+            flush();
         });
 
         fclose($file);
