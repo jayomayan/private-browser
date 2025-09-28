@@ -16,7 +16,10 @@ class DownloadFirmwareVersion extends Command
 
     public function handle(): void
     {
-        $devices = Device::all();
+       // $devices = Device::all();
+        $devices = Device::whereNull('arm_version')
+            ->orWhere('arm_version', '')
+            ->get();
 
         foreach ($devices as $device) {
             if (strtolower($device->name) === 'enetek') {
