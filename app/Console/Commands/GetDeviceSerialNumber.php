@@ -8,89 +8,82 @@ use Illuminate\Support\Facades\Log;
 
 class GetDeviceSerialNumber extends Command
 {
-
-
+    /**
+     * The name and signature of the console command.
+     */
     protected $signature = 'snmp:get-serial {--all : Query all devices (ignore existing serial_number)}';
+
+    /**
+     * The console command description.
+     */
     protected $description = 'Query all devices via SNMP to retrieve and store their serial numbers';
 
-    // OID provided by you for serial number
+    /**
+     * SNMP OID for serial number.
+     */
     private string $serialOid = '.1.3.6.1.4.1.53318.100.2';
 
     public function handle()
     {
-        // Decide which devices to process
         $devices = $this->option('all')
-            ? Device::query()->get()
-            : Device::query()->whereNull('serial_number')->orWhere('serial_number', '')->get();
+            ? Device::all()
+            : Device::whereNull('serial_number')->orWhere('serial_number', '')->get();
 
         if ($devices->isEmpty()) {
             $this->info('No devices to process.');
             return self::SUCCESS;
         }
 
-        $defaults = config('devices.snmp', []);
-        $defCommunity = $defaults['community'] ?? 'axinplc';
-        $defPort      = $defaults['port'] ?? 2161;
-        $timeout      = $defaults['timeout'] ?? 2;
-        $retries      = $defaults['retries'] ?? 1;
-
         foreach ($devices as $device) {
-            $ip        = $device->ip;
-            $community = $device->community ?: $defCommunity;
-            $port      = $device->snmp_port ?: $defPort;
+            $this->info("🔍 SNMP get serial for {$device->ip} ...");
 
-            $this->info("🔍 SNMP get serial for {$ip} ...");
-
-            // Build snmpget command (v2c)
-            // -t timeout, -r retries
             $cmd = sprintf(
-                'snmpget -v2c -t %d -r %d -c %s %s:%d %s',
-                (int) $timeout,
-                (int) $retries,
-                escapeshellarg($community),
-                escapeshellarg($ip),
-                (int) $port,
+                'snmpget -v2c -c %s %s:%d %s',
+                escapeshellarg($device->community ?? 'axinplc'),
+                escapeshellarg($device->ip),
+                $device->snmp_port ?? 2161,
                 escapeshellarg($this->serialOid)
             );
 
             $output = [];
-            $exit   = 0;
-            exec($cmd . ' 2>&1', $output, $exit);
+            $exitCode = 0;
+            exec($cmd . ' 2>&1', $output, $exitCode);
 
-            if ($exit !== 0 || empty($output)) {
-                Log::error("SNMP serial query failed for {$ip} (exit: {$exit}). Output:\n" . implode("\n", $output));
-                $this->error("❌ Failed for {$ip}");
+            if ($exitCode !== 0 || empty($output)) {
+                Log::error("SNMP query failed for {$device->ip} (exit {$exitCode}) Output: " . implode("\n", $output));
+                $this->error("❌ Failed for {$device->ip}");
                 continue;
             }
 
-            // Parse first line like:
-            // .1.3... = STRING: "ABC123"   OR   = Hex-STRING: 41 42 43 ...
+            // Parse SNMP output: OID = STRING: "ABC123"
             $line = $output[0] ?? '';
             $serial = $this->parseSnmpValue($line);
 
-            if (!$serial) {
-                Log::warning("No serial parsed for {$ip}. Raw:\n" . implode("\n", $output));
-                $this->warn("⚠️ No serial for {$ip}");
+            // Skip invalid SNMP responses
+            if (!$serial || str_contains($serial, 'No Such Instance')) {
+                $this->warn("⚠️ No valid serial found for {$device->ip} (Response: {$serial})");
+                Log::warning("SNMP OID {$this->serialOid} returned invalid response for {$device->ip}: {$serial}");
                 continue;
             }
 
-            $device->serial_number = $serial;
-            $device->save();
-
-            Log::info("Serial updated for {$ip}: {$serial}");
-            $this->info("✅ {$ip}: {$serial}");
+            try {
+                $device->update(['serial_number' => $serial]);
+                $this->info("✅ {$device->ip} serial: {$serial}");
+            } catch (\Throwable $e) {
+                Log::error("❌ Failed to update serial for {$device->ip}: " . $e->getMessage());
+                $this->error("❌ DB error for {$device->ip}");
+            }
         }
 
-        $this->info('🎉 Done.');
+        $this->info('🎉 SNMP serial collection complete.');
         return self::SUCCESS;
     }
 
     /**
-     * Parse SNMP output value portion into a string serial.
+     * Parse SNMP output into a clean string value.
      */
     private function parseSnmpValue(string $line): ?string
     {
-        // Expected "OID = TYPE: VALUE"
         if (!str_contains($line, '=')) {
             return null;
         }
@@ -100,20 +93,16 @@ class GetDeviceSerialNumber extends Command
 
         // Handle STRING: "value"
         if (stripos($rhs, 'STRING:') === 0) {
-            $v = trim(substr($rhs, strlen('STRING:')));
-            return trim($v, " \t\n\r\0\x0B\"");
+            return trim(str_replace(['STRING:', '"'], '', $rhs));
         }
 
         // Handle Hex-STRING: 41 42 43 -> ABC
         if (stripos($rhs, 'Hex-STRING:') === 0) {
-            $hex = trim(substr($rhs, strlen('Hex-STRING:')));
-            $hex = preg_replace('/\s+/', '', $hex);
-            if ($hex && ctype_xdigit($hex)) {
-                return @hex2bin($hex) ?: null;
-            }
+            $hex = preg_replace('/\s+/', '', substr($rhs, strlen('Hex-STRING:')));
+            return @hex2bin($hex) ?: null;
         }
 
-        // Fallback: just return RHS without quotes/type if present
-        return trim($rhs, " \t\n\r\0\x0B\"");
+        // Fallback: return trimmed RHS
+        return trim($rhs, '"');
     }
 }
