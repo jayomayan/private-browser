@@ -65,6 +65,8 @@ class GetDeviceSerialNumber extends Command
             $line = $output[0] ?? '';
             $serial = $this->parseSnmpValue($line);
 
+            Log::info("Parsed serial for {$device->ip}", ['serial' => $serial]);
+
             // Skip invalid SNMP responses
             if (!$serial || str_contains($serial, 'No Such Instance')) {
                 $this->warn("⚠️ No valid serial found for {$device->ip} (Response: {$serial})");
