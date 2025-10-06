@@ -9,11 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('devices', function (Blueprint $table) {
-            if (config('database.default') === 'sqlite') {
-                $table->string('serial_number', 100)->nullable()->after('device_name');
-            } else {
-                $table->string('serial_number', 100)->unique()->after('device_name');
-            }
+            $table->string('serial_number', 100)->unique()->nullable();
         });
     }
 
