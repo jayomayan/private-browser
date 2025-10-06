@@ -224,7 +224,7 @@ public function exportLogsCsv()
             ];
 
             // Define your column headers
-            $columns = ['id', 'ip', 'site_id', 'name','fw_version','mib_version', 'created_at','last_log_pulled_at'];
+            $columns = ['id', 'ip','serial_number', 'site_id', 'name','fw_version','mib_version', 'created_at','last_log_pulled_at'];
 
             $callback = function() use ($columns) {
                 $file = fopen('php://output', 'w');
