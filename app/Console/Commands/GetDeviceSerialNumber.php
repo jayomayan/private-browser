@@ -49,6 +49,12 @@ class GetDeviceSerialNumber extends Command
             $exitCode = 0;
             exec($cmd . ' 2>&1', $output, $exitCode);
 
+            // Log the raw response for debugging
+            Log::info("SNMP raw response for {$device->ip}", [
+                'exit_code' => $exitCode,
+                'response'  => $output,
+            ]);
+
             if ($exitCode !== 0 || empty($output)) {
                 Log::error("SNMP query failed for {$device->ip} (exit {$exitCode}) Output: " . implode("\n", $output));
                 $this->error("❌ Failed for {$device->ip}");
@@ -69,6 +75,7 @@ class GetDeviceSerialNumber extends Command
             try {
                 $device->update(['serial_number' => $serial]);
                 $this->info("✅ {$device->ip} serial: {$serial}");
+                Log::info("Serial updated for {$device->ip}", ['serial_number' => $serial]);
             } catch (\Throwable $e) {
                 Log::error("❌ Failed to update serial for {$device->ip}: " . $e->getMessage());
                 $this->error("❌ DB error for {$device->ip}");
