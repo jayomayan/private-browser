@@ -41,7 +41,7 @@ class GetDeviceSerialNumber extends Command
                 'snmpwalk -v2c -c %s %s:%d %s',
                 escapeshellarg($device->community ?? 'axinplc'),
                 escapeshellarg($device->ip),
-                (int) $device->snmp_port ?? 2161,
+                $device->snmp_port ?? 2161,
                 escapeshellarg($this->serialOid)
             );
 
