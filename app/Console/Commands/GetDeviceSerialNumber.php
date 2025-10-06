@@ -21,7 +21,7 @@ class GetDeviceSerialNumber extends Command
     /**
      * SNMP OID for serial number.
      */
-    private string $serialOid = '.1.3.6.1.4.1.53318.100.2';
+    private string $serialOid = ".1.3.6.1.4.1.53318.100.2";
 
     public function handle()
     {
