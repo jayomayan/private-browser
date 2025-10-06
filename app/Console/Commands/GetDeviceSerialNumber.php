@@ -10,7 +10,7 @@ class GetDeviceSerialNumber extends Command
 {
 
 
-    protected $signature = 'snmp:get-serial';
+    protected $signature = 'snmp:get-serial {--all : Query all devices (ignore existing serial_number)}';
     protected $description = 'Query all devices via SNMP to retrieve and store their serial numbers';
 
     // OID provided by you for serial number
