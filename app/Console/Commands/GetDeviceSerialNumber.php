@@ -38,10 +38,10 @@ class GetDeviceSerialNumber extends Command
             $this->info("🔍 SNMP get serial for {$device->ip} ...");
 
             $cmd = sprintf(
-                'snmpget -v2c -c %s %s:%d %s',
+                'snmpwalk -v2c -c %s %s:%d %s',
                 escapeshellarg($device->community ?? 'axinplc'),
                 escapeshellarg($device->ip),
-                $device->snmp_port ?? 2161,
+                (int) $device->snmp_port ?? 2161,
                 escapeshellarg($this->serialOid)
             );
 
