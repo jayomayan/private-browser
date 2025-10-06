@@ -9,6 +9,7 @@ class Device extends Model
    protected $fillable = [
         'ip',
         'name',
+        'serial_number',
         'site_id',
         'arm_version',
         'stm32_version',
