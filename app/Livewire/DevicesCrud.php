@@ -236,6 +236,7 @@ public function exportLogsCsv()
                         fputcsv($file, [
                             $row->id,
                             $row->ip,
+                            $row->serial_number,
                             $row->site_id,
                             $row->name,
                             $row->arm_version,
