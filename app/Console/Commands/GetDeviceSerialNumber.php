@@ -89,27 +89,27 @@ class GetDeviceSerialNumber extends Command
     /**
      * Parse SNMP output into a clean string value.
      */
-    private function parseSnmpValue(string $line): ?string
-    {
-        if (!str_contains($line, '=')) {
-            return null;
-        }
-
-        [, $rhs] = explode('=', $line, 2);
-        $rhs = trim($rhs);
-
-        // Handle STRING: "value"
-        if (stripos($rhs, 'STRING:') === 0) {
-            return trim(str_replace(['STRING:', '"'], '', $rhs));
-        }
-
-        // Handle Hex-STRING: 41 42 43 -> ABC
-        if (stripos($rhs, 'Hex-STRING:') === 0) {
-            $hex = preg_replace('/\s+/', '', substr($rhs, strlen('Hex-STRING:')));
-            return @hex2bin($hex) ?: null;
-        }
-
-        // Fallback: return trimmed RHS
-        return trim($rhs, '"');
+   private function parseSnmpValue(string $line): ?string
+{
+    if (!str_contains($line, '=')) {
+        return null;
     }
+
+    [, $rhs] = explode('=', $line, 2);
+    $rhs = trim($rhs);
+
+    // Handle STRING: "value"
+    if (stripos($rhs, 'STRING:') === 0) {
+        return trim(str_replace(['STRING:', '"'], '', $rhs));
+    }
+
+    // Handle Hex-STRING: 41 42 43 -> ABC
+    if (stripos($rhs, 'Hex-STRING:') === 0) {
+        $hex = preg_replace('/\s+/', '', substr($rhs, strlen('Hex-STRING:')));
+        return @hex2bin($hex) ?: null;
+    }
+
+    // Fallback: return trimmed RHS
+    return trim($rhs, '"');
+}
 }
