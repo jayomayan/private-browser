@@ -66,8 +66,8 @@
                 <tr class="odd:bg-white even:bg-slate-50/60 hover:bg-indigo-50/40">
                     <td class="px-2 py-1 font-medium text-slate-700">{{ $d->id }}</td>
                     <td class="px-2 py-1 tabular-nums">{{ $d->ip }}</td>
-                    <td class="px-2 py-1">{{ $d->site_id }}</td>
                     <td class="px-2 py-1">{{ $d->serial_number ?? 'N/A' }}</td>
+                    <td class="px-2 py-1">{{ $d->site_id }}</td>
                     <td class="px-2 py-1">{{ $d->name }}</td>
                     <td class="px-2 py-1">{{ $d->arm_version ?? 'N/A' }}</td>
                     <td class="px-2 py-1">{{ $d->mib_version ?? 'N/A' }}</td>
