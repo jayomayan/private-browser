@@ -12,3 +12,7 @@ Schedule::command('logs:download')
     ->everyFiveMinutes()
     ->withoutOverlapping(30);
 
+Schedule::command('snmp:get-serial')
+    ->daily()
+    ->withoutOverlapping();
+
