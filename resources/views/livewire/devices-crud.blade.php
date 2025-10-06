@@ -51,6 +51,7 @@
                 <tr>
                     <th class="px-2 py-2">ID</th>
                     <th class="px-2 py-2">IP</th>
+                    <th class="px-2 py-2">Serial No</th>
                     <th class="px-2 py-2">Site ID</th>
                     <th class="px-2 py-2">Name</th>
                     <th class="px-2 py-2">FW Version</th>
@@ -66,6 +67,7 @@
                     <td class="px-2 py-1 font-medium text-slate-700">{{ $d->id }}</td>
                     <td class="px-2 py-1 tabular-nums">{{ $d->ip }}</td>
                     <td class="px-2 py-1">{{ $d->site_id }}</td>
+                    <td class="px-2 py-1">{{ $d->serial_number ?? 'N/A' }}</td>
                     <td class="px-2 py-1">{{ $d->name }}</td>
                     <td class="px-2 py-1">{{ $d->arm_version ?? 'N/A' }}</td>
                     <td class="px-2 py-1">{{ $d->mib_version ?? 'N/A' }}</td>
