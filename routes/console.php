@@ -9,7 +9,8 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('logs:download')
-    ->everyFiveMinutes()
+    #->everyFiveMinutes()
+    ->hourly()
     ->withoutOverlapping(30);
 
 Schedule::command('snmp:get-serial')
