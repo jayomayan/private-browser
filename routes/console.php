@@ -10,7 +10,8 @@ Artisan::command('inspire', function () {
 
 Schedule::command('logs:download')
     #->everyFiveMinutes()
-    ->hourly()
+    #->hourly()
+    ->dailyAt('02:00')
     ->withoutOverlapping(30);
 
 Schedule::command('snmp:get-serial')
