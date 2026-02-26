@@ -8,13 +8,13 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Schedule::command('logs:download')
-    #->everyFiveMinutes()
-    #->hourly()
-    ->dailyAt('02:00')
-    ->withoutOverlapping(30);
+//Schedule::command('logs:download')
+//    #->everyFiveMinutes()
+//    #->hourly()
+//   ->dailyAt('02:00')
+ //   ->withoutOverlapping(30);
 
-Schedule::command('snmp:get-serial')
-    ->daily()
-    ->withoutOverlapping();
+//Schedule::command('snmp:get-serial')
+ //   ->daily()
+ //   ->withoutOverlapping();
 
